@@ -8,815 +8,173 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ─── TOKENS ─────────────────────────────────────────── */
-:root {
-  --radius: 10px;
-  --radius-sm: 6px;
-  --radius-lg: 16px;
-  --shadow: 0 1px 3px rgba(0,0,0,.1), 0 4px 16px rgba(0,0,0,.06);
-  --shadow-md: 0 4px 24px rgba(0,0,0,.12), 0 1px 4px rgba(0,0,0,.08);
-  --shadow-lg: 0 8px 40px rgba(0,0,0,.18);
-  --transition: 0.18s cubic-bezier(.4,0,.2,1);
-  --font: 'Outfit', sans-serif;
-  --mono: 'DM Mono', monospace;
-}
-
-/* DARK */
-[data-theme="dark"] {
-  --bg:       #0c0e14;
-  --bg2:      #111318;
-  --surface:  #161920;
-  --surface2: #1d2028;
-  --surface3: #242730;
-  --border:   #2a2d38;
-  --border2:  #353844;
-  --text:     #eaedf5;
-  --text2:    #9399aa;
-  --text3:    #5e6478;
-  --accent:   #3b82f6;
-  --accent-h: #60a5fa;
-  --accent-bg: rgba(59,130,246,.1);
-  --accent-border: rgba(59,130,246,.3);
-  --green:    #22c55e;
-  --green-bg: rgba(34,197,94,.08);
-  --green-border: rgba(34,197,94,.25);
-  --amber:    #f59e0b;
-  --amber-bg: rgba(245,158,11,.08);
-  --amber-border: rgba(245,158,11,.25);
-  --red:      #ef4444;
-  --red-bg:   rgba(239,68,68,.08);
-  --header-bg: rgba(12,14,20,.92);
-}
-
-/* LIGHT */
-[data-theme="light"] {
-  --bg:       #f4f6fb;
-  --bg2:      #edf0f7;
-  --surface:  #ffffff;
-  --surface2: #f8f9fc;
-  --surface3: #f0f2f8;
-  --border:   #e2e6f0;
-  --border2:  #d0d5e8;
-  --text:     #1a1d2e;
-  --text2:    #5a6180;
-  --text3:    #9099b8;
-  --accent:   #2563eb;
-  --accent-h: #1d4ed8;
-  --accent-bg: rgba(37,99,235,.08);
-  --accent-border: rgba(37,99,235,.3);
-  --green:    #16a34a;
-  --green-bg: rgba(22,163,74,.07);
-  --green-border: rgba(22,163,74,.25);
-  --amber:    #d97706;
-  --amber-bg: rgba(217,119,6,.08);
-  --amber-border: rgba(217,119,6,.25);
-  --red:      #dc2626;
-  --red-bg:   rgba(220,38,38,.07);
-  --header-bg: rgba(244,246,251,.95);
-}
-
-/* ─── RESET & BASE ───────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-  transition: background var(--transition), color var(--transition);
-}
-
-/* Subtle grid pattern */
-body::before {
-  content: '';
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 40px 40px;
-  opacity: 0.18;
-}
-
-/* ─── HEADER ─────────────────────────────────────────── */
-.site-header {
-  position: sticky; top: 0; z-index: 100;
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.header-inner {
-  max-width: 1040px; margin: 0 auto;
-  padding: 0 24px;
-  height: 60px;
-  display: flex; align-items: center; gap: 14px;
-}
-
-.brand {
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none;
-}
-
-.brand-mark {
-  width: 36px; height: 36px; border-radius: 9px;
-  background: var(--accent);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-/* ─── NIELIT LOGO IMAGE ───────────────────────────────
-   Place your logo.png inside an img/ folder next to this
-   HTML file. The image renders at 28×28 px object-contain
-   so any aspect ratio works without cropping.
-   filter: brightness(0) invert(1) turns any logo white so
-   it reads clearly on the blue .brand-mark tile in both
-   light and dark themes (the tile is always --accent blue).
-─────────────────────────────────────────────────────── */
-.brand-logo-img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  display: block;
-  filter: brightness(0) invert(1);
-}
-
-/* Fallback "N" badge shown when logo.png is not found */
-.brand-logo-fallback {
-  display: none;
-  width: 28px; height: 28px;
-  align-items: center; justify-content: center;
-  font-family: var(--font);
-  font-size: 17px; font-weight: 800;
-  color: #fff;
-  letter-spacing: -1px;
-}
-
-.brand-text {
-  display: flex; flex-direction: column;
-  line-height: 1.2;
-}
-
-.brand-name {
-  font-size: 14px; font-weight: 700; color: var(--text);
-  letter-spacing: -.3px;
-}
-
-.brand-sub {
-  font-size: 10.5px; color: var(--text2); font-weight: 400;
-  letter-spacing: .3px;
-}
-
-.header-divider {
-  width: 1px; height: 28px; background: var(--border2);
-  margin: 0 4px;
-}
-
-.app-title {
-  font-size: 13px; font-weight: 600; color: var(--text2);
-}
-
-.header-right {
-  margin-left: auto;
-  display: flex; align-items: center; gap: 8px;
-}
-
-.version-chip {
-  font-family: var(--mono);
-  font-size: 10px; font-weight: 500;
-  padding: 3px 8px; border-radius: 20px;
-  background: var(--accent-bg);
-  border: 1px solid var(--accent-border);
-  color: var(--accent);
-}
-
-/* Theme toggle */
-.theme-toggle {
-  width: 36px; height: 36px; border-radius: var(--radius-sm);
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  transition: all var(--transition);
-  color: var(--text2);
-}
-
-.theme-toggle:hover {
-  background: var(--surface3);
-  border-color: var(--border2);
-  color: var(--text);
-  transform: scale(1.05);
-}
-
-/* ─── LAYOUT ─────────────────────────────────────────── */
-.container {
-  max-width: 1040px; margin: 0 auto;
-  padding: 32px 24px 80px;
-  position: relative; z-index: 1;
-}
-
-/* ─── HERO STRIP ─────────────────────────────────────── */
-.hero {
-  background: linear-gradient(135deg, var(--accent-bg) 0%, transparent 60%);
-  border: 1px solid var(--accent-border);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  margin-bottom: 28px;
-  display: flex; align-items: center; gap: 16px;
-}
-
-.hero-icon {
-  width: 48px; height: 48px; border-radius: 12px;
-  background: var(--accent);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; flex-shrink: 0;
-  box-shadow: 0 4px 16px rgba(59,130,246,.3);
-}
-
-.hero-text h2 {
-  font-size: 17px; font-weight: 700; color: var(--text);
-  letter-spacing: -.3px; margin-bottom: 2px;
-}
-
-.hero-text p { font-size: 12.5px; color: var(--text2); }
-
-.hero-stats {
-  margin-left: auto;
-  display: flex; gap: 24px;
-}
-
-.stat { text-align: center; }
-.stat-n { font-size: 20px; font-weight: 800; color: var(--accent); letter-spacing: -1px; line-height: 1; }
-.stat-l { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
-
-/* ─── STEPPER ────────────────────────────────────────── */
-.stepper {
-  display: flex; margin-bottom: 28px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-
-.step-item {
-  flex: 1; padding: 13px 16px;
-  display: flex; align-items: center; gap: 10px;
-  font-size: 12.5px; font-weight: 500; color: var(--text3);
-  border-right: 1px solid var(--border);
-  cursor: pointer;
-  transition: all var(--transition);
-  position: relative;
-}
-
-.step-item:last-child { border-right: none; }
-
-.step-item:hover { background: var(--surface2); color: var(--text2); }
-
-.step-item.active {
-  color: var(--accent);
-  background: var(--accent-bg);
-}
-
-.step-item.done { color: var(--green); }
-
-.step-num {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--surface3);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 10px; font-weight: 500;
-  flex-shrink: 0; transition: all var(--transition);
-  border: 1.5px solid var(--border2);
-}
-
-.step-item.active .step-num {
-  background: var(--accent); color: #fff; border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-bg);
-}
-
-.step-item.done .step-num {
-  background: var(--green); color: #fff; border-color: var(--green);
-}
-
-.step-label { font-weight: 600; }
-.step-sub { font-size: 10.5px; color: var(--text3); margin-top: 1px; }
-
-/* ─── PANELS ─────────────────────────────────────────── */
-.panel { display: none; animation: panelIn .22s ease; }
-.panel.active { display: block; }
-
-@keyframes panelIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── CARD ───────────────────────────────────────────── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow);
-}
-
-.card-header {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 20px;
-}
-
-.card-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; flex-shrink: 0;
-}
-
-.card-icon.blue  { background: var(--accent-bg); }
-.card-icon.green { background: var(--green-bg); }
-.card-icon.amber { background: var(--amber-bg); }
-
-.card-title {
-  font-size: 13px; font-weight: 700; color: var(--text);
-  letter-spacing: -.2px;
-}
-
-.card-desc { font-size: 11.5px; color: var(--text2); margin-top: 1px; }
-
-/* Section label */
-.section-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-  text-transform: uppercase; color: var(--text3);
-  margin-bottom: 12px;
-  display: flex; align-items: center; gap: 8px;
-}
-.section-label::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-
-/* ─── COURSE GRID ────────────────────────────────────── */
-.course-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
-  gap: 10px;
-}
-
-.course-card {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px;
-  cursor: pointer;
-  transition: all var(--transition);
-  background: var(--surface2);
-  position: relative;
-  overflow: hidden;
-}
-
-.course-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: var(--accent);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform var(--transition);
-}
-
-.course-card:hover {
-  border-color: var(--border2);
-  background: var(--surface3);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-.course-card:hover::before { transform: scaleX(1); }
-
-.course-card.selected {
-  border-color: var(--accent);
-  background: var(--accent-bg);
-  box-shadow: 0 0 0 3px var(--accent-bg);
-}
-
-.course-card.selected::before { transform: scaleX(1); }
-
-.course-card.selected .cc-name { color: var(--accent); }
-
-.cc-emoji { font-size: 22px; margin-bottom: 6px; }
-.cc-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 4px; }
-.cc-code { font-family: var(--mono); font-size: 10px; color: var(--text3); }
-.cc-type {
-  margin-top: 6px; display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 600; color: var(--accent);
-  background: var(--accent-bg); border: 1px solid var(--accent-border);
-  padding: 2px 6px; border-radius: 20px;
-}
-
-/* Selected check */
-.course-card.selected .cc-emoji::after {
-  content: ' ✓';
-  font-size: 14px; color: var(--accent);
-}
-
-/* ─── DROP ZONE ──────────────────────────────────────── */
-.dropzone {
-  border: 2px dashed var(--border2);
-  border-radius: var(--radius);
-  padding: 40px 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: all var(--transition);
-  background: var(--surface2);
-  position: relative;
-}
-
-.dropzone:hover, .dropzone.over {
-  border-color: var(--accent);
-  background: var(--accent-bg);
-}
-
-.dropzone input[type=file] {
-  position: absolute; inset: 0;
-  opacity: 0; cursor: pointer; width: 100%; height: 100%;
-}
-
-.dz-icon {
-  font-size: 36px; margin-bottom: 10px;
-  filter: grayscale(.3);
-  transition: transform var(--transition);
-}
-
-.dropzone:hover .dz-icon { transform: scale(1.05) translateY(-2px); }
-
-.dz-title { font-size: 14px; font-weight: 600; color: var(--text); }
-.dz-sub { font-size: 12px; color: var(--text3); margin-top: 5px; }
-
-.dz-hint {
-  display: inline-flex; align-items: center; gap: 5px;
-  margin-top: 12px; padding: 4px 12px;
-  border-radius: 20px; font-size: 11px;
-  background: var(--surface3); border: 1px solid var(--border);
-  color: var(--text2); font-family: var(--mono);
-}
-
-/* File loaded chip */
-.file-chip {
-  display: flex; align-items: center; gap: 12px;
-  background: var(--green-bg);
-  border: 1px solid var(--green-border);
-  border-radius: var(--radius);
-  padding: 12px 16px; margin-top: 12px;
-}
-
-.file-chip-icon { font-size: 22px; flex-shrink: 0; }
-.file-chip-name { font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--green); }
-.file-chip-meta { font-size: 11px; color: var(--text2); margin-top: 1px; }
-.file-chip-rm {
-  margin-left: auto; background: none; border: none; cursor: pointer;
-  color: var(--text3); font-size: 18px; padding: 2px 4px; border-radius: 4px;
-  transition: color var(--transition);
-}
-.file-chip-rm:hover { color: var(--red); }
-
-/* Multi-institute notice */
-.inst-notice {
-  background: var(--accent-bg);
-  border: 1px solid var(--accent-border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-top: 12px;
-}
-
-.inst-notice-title {
-  font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 8px;
-  display: flex; align-items: center; gap: 6px;
-}
-
-.inst-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-
-.inst-chip {
-  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
-  background: var(--accent-bg); border: 1px solid var(--accent-border);
-  color: var(--accent);
-}
-
-.inst-note { font-size: 11px; color: var(--text2); margin-top: 8px; }
-
-/* ─── PREVIEW TABLE ──────────────────────────────────── */
-.table-wrap {
-  overflow: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  max-height: 280px;
-}
-
-table { width: 100%; border-collapse: collapse; }
-
-thead { position: sticky; top: 0; z-index: 1; }
-
-th {
-  background: var(--surface2);
-  padding: 9px 12px;
-  text-align: left; white-space: nowrap;
-  font-family: var(--mono); font-size: 9.5px; font-weight: 500;
-  text-transform: uppercase; letter-spacing: .5px;
-  color: var(--text3); border-bottom: 1px solid var(--border);
-}
-
-td {
-  padding: 7px 12px;
-  border-bottom: 1px solid var(--border);
-  font-size: 12px; color: var(--text);
-  white-space: nowrap;
-}
-
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--surface2); }
-
-.table-meta { font-size: 11px; color: var(--text3); margin-top: 8px; }
-
-/* ─── FORM ───────────────────────────────────────────── */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-grid.cols3 { grid-template-columns: 1fr 1fr 1fr; }
-
-.field { display: flex; flex-direction: column; gap: 5px; }
-
-.field label {
-  font-size: 10.5px; font-weight: 600; color: var(--text2);
-  letter-spacing: .5px; text-transform: uppercase;
-}
-
-.field input, .field select {
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 9px 12px;
-  color: var(--text);
-  font-family: var(--font); font-size: 13px;
-  outline: none;
-  transition: border-color var(--transition), box-shadow var(--transition);
-  width: 100%;
-}
-
-.field input:focus, .field select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-bg);
-}
-
-.field input::placeholder { color: var(--text3); }
-.field select option { background: var(--surface); }
-
-/* ─── ALERTS / NOTICES ───────────────────────────────── */
-.alert {
-  padding: 12px 14px; border-radius: var(--radius-sm);
-  font-size: 12.5px; margin-bottom: 14px;
-  display: flex; align-items: flex-start; gap: 9px;
-}
-
-.alert-icon { flex-shrink: 0; font-size: 14px; line-height: 1.5; }
-.alert-text { flex: 1; }
-.alert-text strong { font-weight: 700; }
-
-.alert.info    { background: var(--accent-bg); border: 1px solid var(--accent-border); color: var(--accent); }
-.alert.warn    { background: var(--amber-bg);  border: 1px solid var(--amber-border);  color: var(--amber); }
-.alert.success { background: var(--green-bg);  border: 1px solid var(--green-border);  color: var(--green); }
-.alert.danger  { background: var(--red-bg);    border: 1px solid rgba(239,68,68,.25);  color: var(--red); }
-
-/* ─── BUTTONS ────────────────────────────────────────── */
-.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; align-items: center; }
-
-.btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 10px 20px; border-radius: var(--radius-sm);
-  font-family: var(--font); font-size: 13px; font-weight: 600;
-  cursor: pointer; border: none; transition: all var(--transition);
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background: var(--accent); color: #fff;
-  box-shadow: 0 2px 8px rgba(59,130,246,.3);
-}
-.btn-primary:hover {
-  background: var(--accent-h);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(59,130,246,.4);
-}
-.btn-primary:disabled {
-  opacity: .45; cursor: not-allowed; transform: none;
-  box-shadow: none;
-}
-
-.btn-secondary {
-  background: var(--surface2); color: var(--text);
-  border: 1.5px solid var(--border);
-}
-.btn-secondary:hover { background: var(--surface3); border-color: var(--border2); }
-
-.btn-ghost {
-  background: transparent; color: var(--text2);
-  border: 1.5px solid var(--border);
-}
-.btn-ghost:hover { color: var(--text); border-color: var(--border2); }
-
-/* ─── OUTPUT GRID ────────────────────────────────────── */
-.output-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-
-.output-card {
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  display: flex; flex-direction: column; gap: 10px;
-  transition: all var(--transition);
-}
-
-.output-card:hover { border-color: var(--border2); }
-
-.output-card.done {
-  border-color: var(--green);
-  background: var(--green-bg);
-}
-
-.oc-header { display: flex; align-items: flex-start; gap: 10px; }
-
-.oc-icon {
-  width: 34px; height: 34px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px; flex-shrink: 0;
-}
-
-.oc-icon.att   { background: var(--accent-bg); }
-.oc-icon.ia    { background: var(--amber-bg); }
-.oc-icon.result { background: var(--green-bg); }
-
-.oc-name { font-size: 12.5px; font-weight: 700; color: var(--text); }
-.oc-sub  { font-size: 10.5px; color: var(--text3); margin-top: 2px; }
-
-.oc-status {
-  font-family: var(--mono); font-size: 10px; font-weight: 500;
-  padding: 3px 8px; border-radius: 20px;
-  background: var(--surface3); color: var(--text3);
-  border: 1px solid var(--border); width: fit-content;
-  transition: all var(--transition);
-}
-
-.oc-status.ok {
-  background: var(--green-bg); color: var(--green);
-  border-color: var(--green-border);
-}
-
-.oc-status.err {
-  background: var(--red-bg); color: var(--red);
-  border-color: rgba(239,68,68,.25);
-}
-
-/* ─── LOG ────────────────────────────────────────────── */
-.log-box {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  font-family: var(--mono); font-size: 11px;
-  max-height: 160px; overflow-y: auto;
-  line-height: 1.9;
-}
-
-.log-line { color: var(--text3); }
-.log-line.ok   { color: var(--green); }
-.log-line.warn { color: var(--amber); }
-.log-line.err  { color: var(--red); }
-
-/* Progress */
-.progress-track {
-  height: 4px; background: var(--surface3);
-  border-radius: 2px; overflow: hidden; margin-top: 8px;
-}
-
-.progress-fill {
-  height: 100%; width: 0%;
-  background: linear-gradient(90deg, var(--accent), var(--green));
-  border-radius: 2px;
-  transition: width .35s cubic-bezier(.4,0,.2,1);
-}
-
-/* Summary grid */
-.summary-grid {
-  display: grid; grid-template-columns: repeat(6, 1fr);
-  gap: 12px;
-}
-
-.summary-item {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 12px;
-}
-
-.summary-item label {
-  font-size: 9.5px; font-weight: 700; letter-spacing: .8px;
-  text-transform: uppercase; color: var(--text3);
-  display: block; margin-bottom: 4px;
-}
-
-.summary-item .val {
-  font-size: 13px; font-weight: 700; color: var(--text);
-}
-
-.summary-item .val.big {
-  font-size: 24px; font-weight: 800; color: var(--accent);
-  letter-spacing: -1px;
-}
-
-/* ─── FOOTER ─────────────────────────────────────────── */
-.site-footer {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--header-bg);
-  border-top: 1px solid var(--border);
-  backdrop-filter: blur(20px);
-  z-index: 50;
-  padding: 0 24px;
-  height: 38px;
-  display: flex; align-items: center; justify-content: center; gap: 4px;
-}
-
-.footer-inner {
-  max-width: 1040px; width: 100%;
-  display: flex; align-items: center;
-  font-size: 11px; color: var(--text3);
-  gap: 6px;
-}
-
-.footer-sep { color: var(--border2); }
-
-.footer-link {
-  color: var(--accent); text-decoration: none; font-weight: 500;
-}
-
-.footer-link:hover { text-decoration: underline; }
-
-/* ─── UTILITIES ──────────────────────────────────────── */
-.hidden { display: none !important; }
-.mono { font-family: var(--mono); }
-.text-muted { color: var(--text3); }
-.text-accent { color: var(--accent); }
-.text-green { color: var(--green); }
-.fw-700 { font-weight: 700; }
-
-.divider {
-  height: 1px; background: var(--border);
-  margin: 20px 0;
-}
-
-.tag {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
-  border: 1px solid;
-}
-
-.tag.blue  { color: var(--accent); background: var(--accent-bg); border-color: var(--accent-border); }
-.tag.green { color: var(--green);  background: var(--green-bg);  border-color: var(--green-border); }
-.tag.amber { color: var(--amber);  background: var(--amber-bg);  border-color: var(--amber-border); }
-
-/* ─── RESPONSIVE ─────────────────────────────────────── */
-@media (max-width: 768px) {
-  .container { padding: 20px 14px 72px; }
-  .hero { flex-wrap: wrap; }
-  .hero-stats { margin-left: 0; }
-  .stepper { flex-direction: column; }
-  .step-item { border-right: none; border-bottom: 1px solid var(--border); }
-  .step-item:last-child { border-bottom: none; }
-  .form-grid, .output-grid, .summary-grid { grid-template-columns: 1fr 1fr; }
-  .course-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-  .header-divider, .app-title { display: none; }
-}
-
-@media (max-width: 480px) {
-  .form-grid, .output-grid, .summary-grid { grid-template-columns: 1fr; }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text3); }
-
-/* focus-visible */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:root{--radius:10px;--radius-sm:6px;--radius-lg:16px;--shadow:0 1px 3px rgba(0,0,0,.1),0 4px 16px rgba(0,0,0,.06);--shadow-md:0 4px 24px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08);--transition:0.18s cubic-bezier(.4,0,.2,1);--font:'Outfit',sans-serif;--mono:'DM Mono',monospace}
+[data-theme="dark"]{--bg:#0c0e14;--bg2:#111318;--surface:#161920;--surface2:#1d2028;--surface3:#242730;--border:#2a2d38;--border2:#353844;--text:#eaedf5;--text2:#9399aa;--text3:#5e6478;--accent:#3b82f6;--accent-h:#60a5fa;--accent-bg:rgba(59,130,246,.1);--accent-border:rgba(59,130,246,.3);--green:#22c55e;--green-bg:rgba(34,197,94,.08);--green-border:rgba(34,197,94,.25);--amber:#f59e0b;--amber-bg:rgba(245,158,11,.08);--amber-border:rgba(245,158,11,.25);--red:#ef4444;--red-bg:rgba(239,68,68,.08);--header-bg:rgba(12,14,20,.92)}
+[data-theme="light"]{--bg:#f4f6fb;--bg2:#edf0f7;--surface:#ffffff;--surface2:#f8f9fc;--surface3:#f0f2f8;--border:#e2e6f0;--border2:#d0d5e8;--text:#1a1d2e;--text2:#5a6180;--text3:#9099b8;--accent:#2563eb;--accent-h:#1d4ed8;--accent-bg:rgba(37,99,235,.08);--accent-border:rgba(37,99,235,.3);--green:#16a34a;--green-bg:rgba(22,163,74,.07);--green-border:rgba(22,163,74,.25);--amber:#d97706;--amber-bg:rgba(217,119,6,.08);--amber-border:rgba(217,119,6,.25);--red:#dc2626;--red-bg:rgba(220,38,38,.07);--header-bg:rgba(244,246,251,.95)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;min-height:100vh;transition:background var(--transition),color var(--transition)}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.18}
+.site-header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
+.header-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{width:36px;height:36px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.brand-logo-img{width:28px;height:28px;object-fit:contain;display:block;filter:brightness(0) invert(1)}
+.brand-logo-fallback{display:none;width:28px;height:28px;align-items:center;justify-content:center;font-family:var(--font);font-size:17px;font-weight:800;color:#fff}
+.brand-text{display:flex;flex-direction:column;line-height:1.2}
+.brand-name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.brand-sub{font-size:10.5px;color:var(--text2);font-weight:400;letter-spacing:.3px}
+.header-divider{width:1px;height:28px;background:var(--border2);margin:0 4px}
+.app-title{font-size:13px;font-weight:600;color:var(--text2)}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.version-chip{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;background:var(--accent-bg);border:1px solid var(--accent-border);color:var(--accent)}
+.theme-toggle{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--transition);color:var(--text2)}
+.theme-toggle:hover{background:var(--surface3);border-color:var(--border2);color:var(--text);transform:scale(1.05)}
+.container{max-width:1100px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1}
+.hero{background:linear-gradient(135deg,var(--accent-bg) 0%,transparent 60%);border:1px solid var(--accent-border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;gap:16px}
+.hero-icon{width:48px;height:48px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 16px rgba(59,130,246,.3)}
+.hero-text h2{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.3px;margin-bottom:2px}
+.hero-text p{font-size:12.5px;color:var(--text2)}
+.hero-stats{margin-left:auto;display:flex;gap:24px}
+.stat{text-align:center}
+.stat-n{font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-1px;line-height:1}
+.stat-l{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.stepper{display:flex;margin-bottom:28px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.step-item{flex:1;padding:13px 16px;display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:500;color:var(--text3);border-right:1px solid var(--border);cursor:pointer;transition:all var(--transition)}
+.step-item:last-child{border-right:none}
+.step-item:hover{background:var(--surface2);color:var(--text2)}
+.step-item.active{color:var(--accent);background:var(--accent-bg)}
+.step-item.done{color:var(--green)}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:500;flex-shrink:0;transition:all var(--transition);border:1.5px solid var(--border2)}
+.step-item.active .step-num{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.step-item.done .step-num{background:var(--green);color:#fff;border-color:var(--green)}
+.step-label{font-weight:600}
+.step-sub{font-size:10.5px;color:var(--text3);margin-top:1px}
+.panel{display:none;animation:panelIn .22s ease}
+.panel.active{display:block}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.card-icon.blue{background:var(--accent-bg)}
+.card-icon.green{background:var(--green-bg)}
+.card-icon.amber{background:var(--amber-bg)}
+.card-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.card-desc{font-size:11.5px;color:var(--text2);margin-top:1px}
+.section-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:10px}
+.course-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:all var(--transition);background:var(--surface2);position:relative;overflow:hidden}
+.course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform var(--transition)}
+.course-card:hover{border-color:var(--border2);background:var(--surface3);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.course-card:hover::before{transform:scaleX(1)}
+.course-card.selected{border-color:var(--accent);background:var(--accent-bg);box-shadow:0 0 0 3px var(--accent-bg)}
+.course-card.selected::before{transform:scaleX(1)}
+.course-card.selected .cc-name{color:var(--accent)}
+.cc-emoji{font-size:22px;margin-bottom:6px}
+.cc-name{font-size:12px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:4px}
+.cc-code{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.cc-type{margin-top:6px;display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-bg);border:1px solid var(--accent-border);padding:2px 6px;border-radius:20px}
+.dropzone{border:2px dashed var(--border2);border-radius:var(--radius);padding:40px 24px;text-align:center;cursor:pointer;transition:all var(--transition);background:var(--surface2);position:relative}
+.dropzone:hover,.dropzone.over{border-color:var(--accent);background:var(--accent-bg)}
+.dropzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-icon{font-size:36px;margin-bottom:10px;transition:transform var(--transition)}
+.dropzone:hover .dz-icon{transform:scale(1.05) translateY(-2px)}
+.dz-title{font-size:14px;font-weight:600;color:var(--text)}
+.dz-sub{font-size:12px;color:var(--text3);margin-top:5px}
+.dz-hint{display:inline-flex;align-items:center;gap:5px;margin-top:12px;padding:4px 12px;border-radius:20px;font-size:11px;background:var(--surface3);border:1px solid var(--border);color:var(--text2);font-family:var(--mono)}
+.file-chip{display:flex;align-items:center;gap:12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius);padding:12px 16px;margin-top:12px}
+.file-chip-icon{font-size:22px;flex-shrink:0}
+.file-chip-name{font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--green)}
+.file-chip-meta{font-size:11px;color:var(--text2);margin-top:1px}
+.file-chip-rm{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:2px 4px;border-radius:4px;transition:color var(--transition)}
+.file-chip-rm:hover{color:var(--red)}
+.inst-notice{background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:var(--radius);padding:14px 16px;margin-top:12px}
+.inst-notice-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.inst-chips{display:flex;flex-wrap:wrap;gap:6px}
+.inst-chip{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--accent-bg);border:1px solid var(--accent-border);color:var(--accent)}
+.inst-note{font-size:11px;color:var(--text2);margin-top:8px}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--radius);max-height:280px}
+table{width:100%;border-collapse:collapse}
+thead{position:sticky;top:0;z-index:1}
+th{background:var(--surface2);padding:9px 12px;text-align:left;white-space:nowrap;font-family:var(--mono);font-size:9.5px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);border-bottom:1px solid var(--border)}
+td{padding:7px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+.table-meta{font-size:11px;color:var(--text3);margin-top:8px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid.cols3{grid-template-columns:1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:10.5px;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase}
+.field input,.field select{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color var(--transition),box-shadow var(--transition);width:100%}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.field input::placeholder{color:var(--text3)}
+.field select option{background:var(--surface)}
+.alert{padding:12px 14px;border-radius:var(--radius-sm);font-size:12.5px;margin-bottom:14px;display:flex;align-items:flex-start;gap:9px}
+.alert-icon{flex-shrink:0;font-size:14px;line-height:1.5}
+.alert-text{flex:1}
+.alert-text strong{font-weight:700}
+.alert.info{background:var(--accent-bg);border:1px solid var(--accent-border);color:var(--accent)}
+.alert.warn{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
+.alert.success{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+.alert.danger{background:var(--red-bg);border:1px solid rgba(239,68,68,.25);color:var(--red)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all var(--transition);white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.3)}
+.btn-primary:hover{background:var(--accent-h);transform:translateY(-1px);box-shadow:0 4px 16px rgba(59,130,246,.4)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1.5px solid var(--border)}
+.btn-secondary:hover{background:var(--surface3);border-color:var(--border2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1.5px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2)}
+.output-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.output-card{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px;transition:all var(--transition)}
+.output-card:hover{border-color:var(--border2)}
+.output-card.done{border-color:var(--green);background:var(--green-bg)}
+.oc-header{display:flex;align-items:flex-start;gap:10px}
+.oc-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.oc-icon.att{background:var(--accent-bg)}
+.oc-icon.ia{background:var(--amber-bg)}
+.oc-icon.result{background:var(--green-bg)}
+.oc-name{font-size:12.5px;font-weight:700;color:var(--text)}
+.oc-sub{font-size:10.5px;color:var(--text3);margin-top:2px}
+.oc-status{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:20px;background:var(--surface3);color:var(--text3);border:1px solid var(--border);width:fit-content;transition:all var(--transition)}
+.oc-status.ok{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.oc-status.err{background:var(--red-bg);color:var(--red);border-color:rgba(239,68,68,.25)}
+.log-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;font-family:var(--mono);font-size:11px;max-height:160px;overflow-y:auto;line-height:1.9}
+.log-line{color:var(--text3)}
+.log-line.ok{color:var(--green)}
+.log-line.warn{color:var(--amber)}
+.log-line.err{color:var(--red)}
+.progress-track{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:2px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.summary-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+.summary-item label{font-size:9.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px}
+.summary-item .val{font-size:13px;font-weight:700;color:var(--text)}
+.summary-item .val.big{font-size:24px;font-weight:800;color:var(--accent);letter-spacing:-1px}
+.site-footer{position:fixed;bottom:0;left:0;right:0;background:var(--header-bg);border-top:1px solid var(--border);backdrop-filter:blur(20px);z-index:50;padding:0 24px;height:38px;display:flex;align-items:center;justify-content:center}
+.footer-inner{max-width:1100px;width:100%;display:flex;align-items:center;font-size:11px;color:var(--text3);gap:6px}
+.footer-sep{color:var(--border2)}
+.footer-link{color:var(--accent);text-decoration:none;font-weight:500}
+.footer-link:hover{text-decoration:underline}
+.hidden{display:none!important}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;border:1px solid}
+.tag.blue{color:var(--accent);background:var(--accent-bg);border-color:var(--accent-border)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:768px){.container{padding:20px 14px 72px}.hero{flex-wrap:wrap}.hero-stats{margin-left:0}.stepper{flex-direction:column}.step-item{border-right:none;border-bottom:1px solid var(--border)}.form-grid,.output-grid{grid-template-columns:1fr 1fr}.course-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.header-divider,.app-title{display:none}}
+@media(max-width:480px){.form-grid,.output-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<!-- ═══ HEADER ═══════════════════════════════════════════ -->
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="#">
       <div class="brand-mark">
-        <!-- NIELIT logo  -->
         <img src="img/logo.png" class="brand-logo-img" alt="NIELIT" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <!-- Fallback shown only if logo.png is missing -->
         <span class="brand-logo-fallback" aria-hidden="true">N</span>
       </div>
       <div class="brand-text">
@@ -824,28 +182,21 @@ tr:hover td { background: var(--surface2); }
         <span class="brand-sub">National Institute of Electronics &amp; IT</span>
       </div>
     </a>
-
     <div class="header-divider"></div>
     <span class="app-title">NSQF Excel Generator</span>
-
     <div class="header-right">
-      <span class="version-chip">v3.0</span>
-      <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">
-        <span id="themeIcon">🌙</span>
-      </button>
+      <span class="version-chip">v2.0</span>
+      <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme"><span id="themeIcon">🌙</span></button>
     </div>
   </div>
 </header>
 
-<!-- ═══ MAIN ══════════════════════════════════════════════ -->
 <main class="container">
-
-  <!-- Hero -->
   <div class="hero">
     <div class="hero-icon">📊</div>
     <div class="hero-text">
       <h2>NSQF Examination File Generator</h2>
-      <p>Upload an RO source file · auto-generate Attendance, Internal Assessment &amp; Compiled Result sheets</p>
+      <p>Upload RO source file · auto-generate Attendance, Internal Assessment &amp; Compiled Result sheets — exactly matching NIELIT format</p>
     </div>
     <div class="hero-stats">
       <div class="stat"><div class="stat-n">12</div><div class="stat-l">Courses</div></div>
@@ -854,7 +205,6 @@ tr:hover td { background: var(--surface2); }
     </div>
   </div>
 
-  <!-- Stepper -->
   <div class="stepper">
     <div class="step-item active" id="sn1" onclick="gS(1)">
       <div class="step-num">1</div>
@@ -874,94 +224,66 @@ tr:hover td { background: var(--surface2); }
     </div>
   </div>
 
-  <!-- ── STEP 1 ── -->
+  <!-- STEP 1 -->
   <div class="panel active" id="p1">
     <div class="card">
       <div class="card-header">
         <div class="card-icon blue">📚</div>
-        <div>
-          <div class="card-title">Select NSQF Course</div>
-          <div class="card-desc">Choose the course for which you are preparing examination files</div>
-        </div>
+        <div><div class="card-title">Select NSQF Course</div><div class="card-desc">Choose the course for which you are preparing examination files</div></div>
       </div>
-
       <div class="section-label">Available Courses</div>
       <div class="course-grid" id="cg"></div>
     </div>
-
     <div class="btn-row">
-      <button class="btn btn-primary" id="s1n" onclick="gS(2)" disabled>
-        Continue to Upload &rarr;
-      </button>
-      <span class="text-muted" id="selLabel" style="font-size:12px"></span>
+      <button class="btn btn-primary" id="s1n" onclick="gS(2)" disabled>Continue to Upload &rarr;</button>
+      <span style="font-size:12px;color:var(--text3)" id="selLabel"></span>
     </div>
   </div>
 
-  <!-- ── STEP 2 ── -->
+  <!-- STEP 2 -->
   <div class="panel" id="p2">
     <div class="card">
       <div class="card-header">
         <div class="card-icon blue">📂</div>
-        <div>
-          <div class="card-title">Upload RO Source File</div>
-          <div class="card-desc">Upload the original RO data file — student data is extracted automatically</div>
-        </div>
+        <div><div class="card-title">Upload RO Source File</div><div class="card-desc">Upload the original RO data file — student data is extracted automatically</div></div>
       </div>
-
       <div class="alert info">
         <span class="alert-icon">ℹ️</span>
-        <div class="alert-text">Selected course: <strong id="scn">—</strong>. If the file contains multiple institutes, files will be generated separately for each.</div>
+        <div class="alert-text">Selected course: <strong id="scn">—</strong>. Multiple institutes in one file will generate separate sets automatically.</div>
       </div>
-
       <div class="dropzone" id="dz">
         <input type="file" id="rf" accept=".xlsx,.xls" onchange="hF(this.files[0])">
         <div class="dz-icon">📋</div>
         <div class="dz-title">Drop your RO Excel file here</div>
-        <div class="dz-sub">or click to browse your computer</div>
-        <div class="dz-hint">✦ .xlsx &nbsp;&nbsp; ✦ .xls</div>
+        <div class="dz-sub">or click to browse</div>
+        <div class="dz-hint">✦ .xlsx &nbsp; ✦ .xls</div>
       </div>
-
       <div id="fld"></div>
     </div>
-
     <div id="ii"></div>
-
     <div id="pvs" class="hidden">
       <div class="card">
         <div class="card-header">
           <div class="card-icon green">👥</div>
-          <div>
-            <div class="card-title">Student Preview</div>
-            <div class="card-desc">Extracted from uploaded RO file</div>
-          </div>
+          <div><div class="card-title">Student Preview</div><div class="card-desc">Extracted from uploaded RO file</div></div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead id="ph"></thead>
-            <tbody id="pb"></tbody>
-          </table>
-        </div>
+        <div class="table-wrap"><table><thead id="ph"></thead><tbody id="pb"></tbody></table></div>
         <p class="table-meta" id="pc"></p>
       </div>
     </div>
-
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="gS(1)">&larr; Back</button>
       <button class="btn btn-primary" id="s2n" onclick="gS(3)" disabled>Configure Details &rarr;</button>
     </div>
   </div>
 
-  <!-- ── STEP 3 ── -->
+  <!-- STEP 3 -->
   <div class="panel" id="p3">
     <div class="card">
       <div class="card-header">
         <div class="card-icon amber">⚙️</div>
-        <div>
-          <div class="card-title">Exam &amp; Institute Details</div>
-          <div class="card-desc">Fields are auto-filled from the RO file where available — verify and complete any missing details</div>
-        </div>
+        <div><div class="card-title">Exam &amp; Institute Details</div><div class="card-desc">Auto-filled from RO file where possible — verify and complete any missing details</div></div>
       </div>
-
       <div class="section-label">Examination Schedule</div>
       <div class="form-grid" style="margin-bottom:18px">
         <div class="field"><label>Exam Cycle</label><input id="cy" placeholder="e.g. March 2026"></div>
@@ -976,7 +298,6 @@ tr:hover td { background: var(--surface2); }
         <div class="field"><label>Start Date</label><input type="date" id="sd"></div>
         <div class="field"><label>End Date</label><input type="date" id="ed"></div>
       </div>
-
       <div class="divider"></div>
       <div class="section-label">Institute &amp; Course Info</div>
       <div class="form-grid">
@@ -985,50 +306,36 @@ tr:hover td { background: var(--surface2); }
         <div class="field"><label>Course Duration</label><input id="dur" placeholder="auto-filled from course"></div>
         <div class="field"><label>Course Code</label><input id="cc2" placeholder="auto-filled from course"></div>
       </div>
-
       <div id="mic" class="hidden" style="margin-top:18px">
         <div class="alert warn">
           <span class="alert-icon">⚠️</span>
-          <div class="alert-text">This file contains <strong id="icw"></strong> institutes — a separate set of files will be generated for each. You may enter institute-specific TP codes below.</div>
+          <div class="alert-text">This file contains <strong id="icw"></strong> institutes. Enter institute-specific TP Codes below:</div>
         </div>
         <div class="form-grid" id="itf"></div>
       </div>
     </div>
-
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="gS(2)">&larr; Back</button>
       <button class="btn btn-primary" onclick="gS(4)">Preview &amp; Generate &rarr;</button>
     </div>
   </div>
 
-  <!-- ── STEP 4 ── -->
+  <!-- STEP 4 -->
   <div class="panel" id="p4">
-
-    <!-- Summary -->
     <div class="card">
       <div class="card-header">
         <div class="card-icon green">📋</div>
-        <div>
-          <div class="card-title">Generation Summary</div>
-          <div class="card-desc">Review before generating files</div>
-        </div>
+        <div><div class="card-title">Generation Summary</div><div class="card-desc">Review before generating files</div></div>
       </div>
-      <div class="summary-grid" id="sb"></div>
+      <div id="sb"></div>
     </div>
-
-    <!-- Output cards -->
     <div class="card">
       <div class="card-header">
         <div class="card-icon blue">📥</div>
-        <div>
-          <div class="card-title">Files to Generate</div>
-          <div class="card-desc">All files will be downloaded automatically to your Downloads folder</div>
-        </div>
+        <div><div class="card-title">Files to Generate</div><div class="card-desc">All files downloaded automatically to your Downloads folder</div></div>
       </div>
       <div class="output-grid" id="og"></div>
     </div>
-
-    <!-- Log -->
     <div id="ls" class="hidden">
       <div class="card">
         <div class="card-header">
@@ -1039,66 +346,94 @@ tr:hover td { background: var(--surface2); }
         <div class="progress-track"><div class="progress-fill" id="pf"></div></div>
       </div>
     </div>
-
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="gS(3)">&larr; Back</button>
-      <button class="btn btn-primary" id="gb" onclick="genAll()">
-        ⚡ Generate All Excel Files
-      </button>
+      <button class="btn btn-primary" id="gb" onclick="genAll()">⚡ Generate All Excel Files</button>
     </div>
   </div>
-
 </main>
 
-<!-- ═══ FOOTER ════════════════════════════════════════════ -->
 <footer class="site-footer">
   <div class="footer-inner">
     <span>© 2026 NIELIT Ropar</span>
     <span class="footer-sep">·</span>
-    <span>National Institute of Electronics and Information Technology</span>
-    <span class="footer-sep">·</span>
-    <span>NSQF Excel Generator v3.0</span>
+    <span>NSQF Excel Generator v2.0</span>
     <span class="footer-sep">·</span>
     <a class="footer-link" href="https://www.nielit.gov.in" target="_blank">nielit.gov.in</a>
-    <span style="margin-left:auto;font-size:10px">All files generated locally — no data is uploaded</span>
+    <span style="margin-left:auto;font-size:10px">All files generated locally — no data uploaded</span>
   </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ══════════════════════════════════════════════════
-// THEME
-// ══════════════════════════════════════════════════
+// ── THEME ──────────────────────────────────────────────────
 function toggleTheme(){
-  const html=document.documentElement;
-  const isDark=html.getAttribute('data-theme')==='dark';
-  html.setAttribute('data-theme',isDark?'light':'dark');
-  document.getElementById('themeIcon').textContent=isDark?'🌙':'☀️';
-  localStorage.setItem('theme',isDark?'light':'dark');
+  const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeIcon').textContent=d?'🌙':'☀️';
+  localStorage.setItem('theme',d?'light':'dark');
 }
+(()=>{const s=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.getElementById('themeIcon').textContent=s==='light'?'🌙':'☀️';})();
 
-(()=>{
-  const saved=localStorage.getItem('theme')||'dark';
-  document.documentElement.setAttribute('data-theme',saved);
-  document.getElementById('themeIcon').textContent=saved==='light'?'🌙':'☀️';
-})();
-
-// ══════════════════════════════════════════════════
-// COURSE CATALOGUE
-// ══════════════════════════════════════════════════
+// ── COURSE CATALOGUE ──────────────────────────────────────
+// sh values: '1T+1P', '2T+1P', '1T+1P+TY'
+// Marks schema per course (drives sheet generation):
+//   ia1Label, ia2Label  → Internal Assessment columns
+//   p1Label             → Practical 1 marks header
+//   p1Marks             → Practical 1 total (for display)
+//   ia1Marks, ia2Marks  → IA max marks
+//   result_p2           → 'NA' or ''  (Practical 2 column value)
+//   result_mp1,result_mp2 → 'NA' or ''
 const C={
-  EAI:   {icon:'🤖',name:'Essentials of AI',                         code:'I091',dur:'120 Hrs',sh:'1T+1P',   ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',p1:'Practical 1\n(90)'},
-  ECCV:  {icon:'☁️', name:'Essentials of Cloud Computing & Virt.',   code:'I092',dur:'120 Hrs',sh:'1T+1P',   ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',p1:'Practical 1\n(90)'},
-  FDCUP: {icon:'🐍',name:'Fundamentals of Data Curation (Python)',   code:'I081',dur:'120 Hrs',sh:'1T+1P',   ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',p1:'Practical 1\n(90)'},
-  FDAUP: {icon:'🏷️',name:'Fundamentals of Data Annotation (Python)',code:'I079',dur:'120 Hrs',sh:'1T+1P',   ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',p1:'Practical 1\n(90)'},
-  CDEOA: {icon:'📊',name:'Certified Data Entry & Office Asst.',      code:'I059',dur:'210 Hrs',sh:'1T+1P+TY',ia1:'Internal Assessment (20)\n(30)',ia2:'Assignment\n(20)',p1:'Practical 1\n(60)',spd:true},
-  CCAAPA:{icon:'📒',name:'Certified Comp. App. Accounting & Pub.',   code:'I060',dur:'360 Hrs',sh:'1T+1P',   ia1:'Internal Assessment \n(30)',ia2:'Assignment\n(30)',p1:'Practical 1\n(90)'},
-  FSDA:  {icon:'💻',name:'Full Stack Development Associate',          code:'I090',dur:'330 Hrs',sh:'2T+1P',   ia1:'ES\n(30)',ia2:'Project (30)',p1:'Practical 1\n(90)'},
-  MDA:   {icon:'🎨',name:'Multimedia Development Associate',          code:'I077',dur:'330 Hrs',sh:'2T+1P',   ia1:'ES\n(30)',ia2:'Project (30)',p1:'Practical 1\n(90)'},
-  ITeS:  {icon:'📞',name:'ITeS BPO Executive - Voice',               code:'I078',dur:'300 Hrs',sh:'2T+1P',   ia1:'Internal Assessment\n(30)',ia2:'Project\n(30)',p1:'Practical 1\n(90)'},
-  ACT:   {icon:'🔧',name:'Assistant Computer Technician',             code:'E063',dur:'360 Hrs',sh:'2T+1P',   ia1:'Internal Assessment\n(30)',ia2:'Project\n\n(30)',p1:'Practical 1\n(90)'},
-  IOT_A: {icon:'📡',name:'IoT Assistant',                             code:'E058',dur:'300 Hrs',sh:'2T+1P',   ia1:'Internal Assessment\n(30)',ia2:'Project\n\n(30)',p1:'Practical 1\n(90)'},
-  IOT_As:{icon:'🔌',name:'IoT Associate',                             code:'E059',dur:'360 Hrs',sh:'2T+1P',   ia1:'Internal Assessment\n(30)',ia2:'Project\n\n(30)',p1:'Practical 1\n(90)'},
+  EAI:   {icon:'🤖',name:'Essentials of AI',                         code:'I091',dur:'120 Hrs',sh:'1T+1P',
+           ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',ia1m:20,ia2m:20,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  ECCV:  {icon:'☁️', name:'Essentials of Cloud Computing & Virt.',   code:'I092',dur:'120 Hrs',sh:'1T+1P',
+           ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',ia1m:20,ia2m:20,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  FDCUP: {icon:'🐍',name:'Fundamentals of Data Curation (Python)',   code:'I081',dur:'120 Hrs',sh:'1T+1P',
+           ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',ia1m:20,ia2m:20,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  FDAUP: {icon:'🏷️',name:'Fundamentals of Data Annotation (Python)',code:'I079',dur:'120 Hrs',sh:'1T+1P',
+           ia1:'Internal Assessment\n(20)',ia2:'Project/ Assignment\n(20)',ia1m:20,ia2m:20,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  CDEOA: {icon:'📊',name:'Certified Data Entry & Office Asst.',      code:'I059',dur:'210 Hrs',sh:'1T+1P+TY',
+           ia1:'Internal Assessment (20)\n(30)',ia2:'Assignment\n(20)',ia1m:30,ia2m:20,
+           p1:'Practical 1\n(60)',p1m:60, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)',
+           spd:true,spdLabel:'Data Entry Speed\n(WPM)'},
+  CCAAPA:{icon:'📒',name:'Certified Comp. App. Accounting & Pub.',   code:'I060',dur:'360 Hrs',sh:'1T+1P',
+           ia1:'Internal Assessment \n(30)',ia2:'Assignment\n(30)',ia1m:30,ia2m:30,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  FSDA:  {icon:'💻',name:'Full Stack Development Associate',          code:'I090',dur:'330 Hrs',sh:'2T+1P',
+           ia1:'ES\n(30)',ia2:'Project (30)',ia1m:30,ia2m:30,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  MDA:   {icon:'🎨',name:'Multimedia Development Associate',          code:'I077',dur:'330 Hrs',sh:'2T+1P',
+           ia1:'ES\n(30)',ia2:'Project (30)',ia1m:30,ia2m:30,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  ITeS:  {icon:'📞',name:'ITeS BPO Executive - Voice',               code:'I078',dur:'300 Hrs',sh:'2T+1P',
+           ia1:'Internal Assessment\n(30)',ia2:'Project\n(30)',ia1m:30,ia2m:30,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  ACT:   {icon:'🔧',name:'Assistant Computer Technician',             code:'E063',dur:'360 Hrs',sh:'2T+1P',
+           ia1:'Internal Assessment\n(30)',ia2:'Project\n\n(30)',ia1m:30,ia2m:30,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  IOT_A: {icon:'📡',name:'IoT Assistant',                             code:'E058',dur:'300 Hrs',sh:'2T+1P',
+           ia1:'Internal Assessment\n(30)',ia2:'Project\n\n(30)',ia1m:30,ia2m:30,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
+  IOT_As:{icon:'🔌',name:'IoT Associate',                             code:'E059',dur:'360 Hrs',sh:'2T+1P',
+           ia1:'Internal Assessment\n(30)',ia2:'Project\n\n(30)',ia1m:30,ia2m:30,
+           p1:'Practical 1\n(90)',p1m:90, result_p2:'NA',result_mp1:'NA',result_mp2:'NA',
+           result_ia1:'ES/ Internal Assessment \n(30)',result_ia2:'OJT/ Project\n(30)'},
 };
 
 const S={cid:null,students:[],byInst:{},insts:[],step:1};
@@ -1107,16 +442,12 @@ const gv=id=>document.getElementById(id)?.value||'';
 // Build course grid
 (()=>{
   const g=document.getElementById('cg');
-  const shLabel=sh=>{
-    if(sh==='2T+1P')return'2 Theory + Practical';
-    if(sh==='1T+1P+TY')return'1 Theory + Practical + Typing';
-    return'1 Theory + Practical';
-  };
+  const shLabel=sh=>sh==='2T+1P'?'2 Theory + Practical':sh==='1T+1P+TY'?'Theory + Practical + Typing':'1 Theory + Practical';
   g.innerHTML=Object.entries(C).map(([k,v])=>`
     <div class="course-card" id="co-${k}" onclick="selC('${k}')">
       <div class="cc-emoji">${v.icon}</div>
       <div class="cc-name">${v.name}</div>
-      <div class="cc-code">${v.code} &nbsp;·&nbsp; ${v.dur}</div>
+      <div class="cc-code">${v.code} · ${v.dur}</div>
       <div class="cc-type">${shLabel(v.sh)}</div>
     </div>`).join('');
 })();
@@ -1130,7 +461,6 @@ function selC(k){
   document.getElementById('selLabel').innerHTML=`<span class="tag blue">${C[k].icon} ${C[k].name}</span> selected`;
 }
 
-// Navigation
 function gS(n){
   if(n>=2&&!S.cid){alert('Please select a course first.');return;}
   if(n>=3&&!S.students.length){alert('Please upload an RO file first.');return;}
@@ -1157,21 +487,20 @@ function hF(file){
   if(!file)return;
   const rd=new FileReader();
   rd.onload=e=>{
-    const wb=XLSX.read(e.target.result,{type:'array'});
+    const wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
     const ws=wb.Sheets[wb.SheetNames[0]];
-    const raw=XLSX.utils.sheet_to_json(ws,{header:1});
+    const raw=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:'DD-MM-YYYY'});
     let hi=raw.findIndex(r=>r.some(c=>String(c||'').includes('Course_name')||String(c||'').includes('Candidate_Name')));
     if(hi<0)hi=0;
     const hdr=raw[hi];
     const all=[];
     for(let i=hi+1;i<raw.length;i++){
-      const r=raw[i];
-      if(!r||r.every(c=>!c))continue;
+      const r=raw[i];if(!r||r.every(c=>!c))continue;
       const o={};hdr.forEach((h,j)=>{o[h]=r[j];});
-      if(o['Candidate_Name'])all.push(o);
+      if(o['Candidate_Name']||o['Candidate name'])all.push(o);
     }
-    const iK=r=>String(r['Institute_Name']||r['Venue']||r['Vanue']||'');
-    const rK=r=>String(r['Candidate_registration_no']||'');
+    const iK=r=>String(r['Institute_Name']||r['Venue']||r['Vanue']||'').trim();
+    const rK=r=>String(r['Candidate_registration_no']||'').trim();
     const seen=new Set(),uniq=[];
     all.forEach(r=>{const k=rK(r)+'|'+iK(r);if(!seen.has(k)){seen.add(k);uniq.push(r);}});
     const byI={};
@@ -1185,21 +514,21 @@ function hF(file){
           <div class="file-chip-name">${file.name}</div>
           <div class="file-chip-meta">${uniq.length} students · ${S.insts.length} institute(s) · ${(file.size/1024).toFixed(1)} KB</div>
         </div>
-        <button class="file-chip-rm" onclick="clrF()" title="Remove file">✕</button>
+        <button class="file-chip-rm" onclick="clrF()" title="Remove">✕</button>
       </div>`;
     document.getElementById('s2n').disabled=false;
 
     const ii=document.getElementById('ii');
-    ii.innerHTML=S.insts.length>1?`
-      <div class="inst-notice">
-        <div class="inst-notice-title">📍 Multiple Institutes Detected</div>
-        <div class="inst-chips">${S.insts.map(i=>`<span class="inst-chip">${S.byInst[i].length} students &mdash; ${i}</span>`).join('')}</div>
-        <p class="inst-note">Separate Excel files will be generated for each institute.</p>
-      </div>`:
-      `<div class="inst-notice" style="margin-top:12px">
-        <div class="inst-notice-title" style="margin-bottom:4px">🏫 ${S.insts[0]}</div>
-        <p class="inst-note" style="margin-top:0">${uniq.length} students found in this institute.</p>
-      </div>`;
+    ii.innerHTML=S.insts.length>1
+      ?`<div class="inst-notice">
+          <div class="inst-notice-title">📍 Multiple Institutes Detected</div>
+          <div class="inst-chips">${S.insts.map(i=>`<span class="inst-chip">${S.byInst[i].length} students — ${i}</span>`).join('')}</div>
+          <p class="inst-note">Separate Excel files will be generated for each institute.</p>
+        </div>`
+      :`<div class="inst-notice" style="margin-top:12px">
+          <div class="inst-notice-title" style="margin-bottom:4px">🏫 ${S.insts[0]}</div>
+          <p class="inst-note" style="margin-top:0">${uniq.length} students found.</p>
+        </div>`;
 
     document.getElementById('pvs').classList.remove('hidden');
     renderPrev();
@@ -1209,8 +538,7 @@ function hF(file){
 
 function clrF(){
   S.students=[];S.byInst={};S.insts=[];
-  document.getElementById('fld').innerHTML='';
-  document.getElementById('ii').innerHTML='';
+  ['fld','ii'].forEach(id=>document.getElementById(id).innerHTML='');
   document.getElementById('pvs').classList.add('hidden');
   document.getElementById('s2n').disabled=true;
   document.getElementById('rf').value='';
@@ -1226,28 +554,48 @@ function renderPrev(){
 function populateCfg(){
   const c=C[S.cid];
   const sv=(id,v)=>{const el=document.getElementById(id);if(el&&!el.value)el.value=v;};
-  const pd=v=>{if(!v)return null;if(v instanceof Date)return v;if(typeof v==='number')return new Date((v-25569)*86400*1000);const d=new Date(v);return isNaN(d)?null:d;};
-  const fmt=d=>d?d.toISOString().slice(0,10):'';
+  const parseDate=v=>{
+    if(!v)return null;
+    if(v instanceof Date)return v;
+    if(typeof v==='string'){
+      // Try DD-MM-YYYY
+      const m=v.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+      if(m)return new Date(+m[3],+m[2]-1,+m[1]);
+      // Try YYYY-MM-DD HH:MM:SS
+      const d=new Date(v);
+      if(!isNaN(d))return d;
+    }
+    if(typeof v==='number')return new Date((v-25569)*86400*1000);
+    return null;
+  };
+  const fmt=d=>{if(!d)return'';const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0');return`${d.getFullYear()}-${mm}-${dd}`;};
   const s=S.students[0]||{};
-  const td=pd(s['Exam Date']||s['Exam_Date']||s['Exam_date']);
-  const prd=pd(s['Practical Date']||s['Practical_Date']||s['Practical_date']);
-  const esd=pd(s['ES_Date']||null);
+  const td=parseDate(s['Exam Date']||s['Exam_Date']||s['Exam_date']);
+  const prd=parseDate(s['Practical Date']||s['Practical_Date']||s['Practical_date']);
+  const esd=parseDate(s['ES_Date']||null);
+  const batchVal=String(s['Batch']||'').trim();
+
   if(td)sv('td',fmt(td));
   if(prd)sv('pd',fmt(prd));
-  if(s['Batch'])sv('bt',String(s['Batch']));
+  if(batchVal)sv('bt',batchVal);
   sv('dur',c.dur);sv('cc2',c.code);sv('cy','March 2026');
-  sv('tt','09:30:00');sv('t2t','12 noon');
+  // Auto-set times
+  sv('tt','09:30:00');
+  sv('t2t','12 noon');
   sv('pt',c.sh==='2T+1P'?'15:00:00':'14:00:00');
   document.getElementById('ft2').classList.toggle('hidden',c.sh!=='2T+1P');
   document.getElementById('fty1').classList.toggle('hidden',c.sh!=='1T+1P+TY');
   document.getElementById('fty2').classList.toggle('hidden',c.sh!=='1T+1P+TY');
-  if(c.sh==='1T+1P+TY'){if(esd)sv('tyd',fmt(esd));else if(prd)sv('tyd',fmt(prd));sv('tyt','15:00:00');}
+  if(c.sh==='1T+1P+TY'){
+    if(esd)sv('tyd',fmt(esd));else if(prd)sv('tyd',fmt(prd));
+    sv('tyt','15:00:00');
+  }
   if(S.insts.length>1){
     document.getElementById('mic').classList.remove('hidden');
     document.getElementById('icw').textContent=S.insts.length;
     document.getElementById('itf').innerHTML=S.insts.map((inst,i)=>`
       <div class="field">
-        <label>${inst.substring(0,42)}</label>
+        <label>${inst.substring(0,44)}</label>
         <input id="tpc-${i}" placeholder="TP Code for this institute">
       </div>`).join('');
   } else {
@@ -1257,37 +605,28 @@ function populateCfg(){
 
 function buildSum(){
   const c=C[S.cid];
-  const items=[
-    {label:'Course',val:`${c.icon} ${c.name}`,span:2},
-    {label:'Code',val:c.code},
-    {label:'Students',val:S.students.length,big:true},
-    {label:'Institutes',val:S.insts.length},
-    {label:'Exam Cycle',val:gv('cy')||'—'},
-    {label:'Theory Date',val:gv('td')||'—'},
-    {label:'Practical Date',val:gv('pd')||'—'},
-    {label:'Duration',val:gv('dur')||c.dur},
-  ];
   document.getElementById('sb').innerHTML=`
-    <div class="summary-grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">
-      ${items.map(i=>`
-        <div class="summary-item" ${i.span?`style="grid-column:span ${i.span}"`:''}> 
-          <label>${i.label}</label>
-          <div class="val${i.big?' big':''}">${i.val}</div>
-        </div>`).join('')}
+    <div class="summary-grid">
+      ${[
+        {label:'Course',val:`${c.icon} ${c.name}`,span:2},
+        {label:'Code',val:c.code},
+        {label:'Students',val:S.students.length,big:true},
+        {label:'Institutes',val:S.insts.length},
+        {label:'Exam Cycle',val:gv('cy')||'—'},
+        {label:'Theory Date',val:gv('td')||'—'},
+        {label:'Practical Date',val:gv('pd')||'—'},
+        {label:'Duration',val:gv('dur')||c.dur},
+      ].map(i=>`<div class="summary-item"${i.span?` style="grid-column:span ${i.span}"`:''}><label>${i.label}</label><div class="val${i.big?' big':''}">${i.val}</div></div>`).join('')}
     </div>`;
 }
 
 function buildOG(){
   const c=C[S.cid];
-  const shLabel=sh=>{
-    if(sh==='2T+1P')return'Theory 1 + Theory 2 + Practical';
-    if(sh==='1T+1P+TY')return'Theory + Practical + Typing';
-    return'Theory + Practical';
-  };
+  const shDesc=sh=>sh==='2T+1P'?'Theory 1 + Theory 2 + Practical':sh==='1T+1P+TY'?'Theory + Practical + Typing':'Theory + Practical';
   const mkCards=(sfx='',label='')=>[
-    {id:`at${sfx}`,cls:'att',icon:'📋',name:'Attendance',sub:shLabel(c.sh)+(label?` — ${label}`:'')},
-    {id:`ia${sfx}`,cls:'ia', icon:'📝',name:'Internal Assessment',sub:'Marks template'+(label?` — ${label}`:'')},
-    {id:`rs${sfx}`,cls:'result',icon:'🏆',name:'Compiled Result (HQ)',sub:'Full marks sheet'+(label?` — ${label}`:'')},
+    {id:`at${sfx}`,cls:'att', icon:'📋',name:'Attendance',    sub:shDesc(c.sh)+(label?` — ${label.substring(0,22)}`:'')},
+    {id:`ia${sfx}`,cls:'ia',  icon:'📝',name:'Internal Assessment',sub:'Marks template'+(label?` — ${label.substring(0,22)}`:'')},
+    {id:`rs${sfx}`,cls:'result',icon:'🏆',name:'Compiled Result (HQ)',sub:'Full marks sheet'+(label?` — ${label.substring(0,22)}`:'')},
   ].map(f=>`
     <div class="output-card" id="oc-${f.id}">
       <div class="oc-header">
@@ -1297,13 +636,11 @@ function buildOG(){
       <div class="oc-status" id="os-${f.id}">Pending</div>
     </div>`).join('');
   document.getElementById('og').innerHTML=S.insts.length>1
-    ?S.insts.map((inst,i)=>mkCards(String(i),inst.substring(0,24))).join('')
+    ?S.insts.map((inst,i)=>mkCards(String(i),inst)).join('')
     :mkCards();
 }
 
-// ══════════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════════
+// ── HELPERS ───────────────────────────────────────────────
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 function setOK(id){
@@ -1311,7 +648,6 @@ function setOK(id){
   if(el){el.textContent='✓ Downloaded';el.className='oc-status ok';}
   document.getElementById('oc-'+id)?.classList.add('done');
 }
-
 function setERR(id){
   const el=document.getElementById('os-'+id);
   if(el){el.textContent='⚠ Error';el.className='oc-status err';}
@@ -1324,91 +660,149 @@ function log(msg,cls=''){
 }
 function prog(pct){progEl.style.width=pct+'%';}
 
+// Format date as DD-MM-YYYY
 function fmtDate(v){
-  if(!v)return'';
+  if(!v||v===''||v===null||v===undefined)return'';
   let d;
-  if(v instanceof Date)d=v;
-  else if(typeof v==='number')d=new Date((v-25569)*86400*1000);
-  else{d=new Date(v);if(isNaN(d))return String(v);}
+  if(v instanceof Date){d=v;}
+  else if(typeof v==='string'){
+    // Already DD-MM-YYYY
+    if(/^\d{2}-\d{2}-\d{4}$/.test(v.trim()))return v.trim();
+    // Try parsing
+    const m=v.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if(m)d=new Date(+m[3],+m[2]-1,+m[1]);
+    else d=new Date(v);
+  } else if(typeof v==='number'){
+    d=new Date((v-25569)*86400*1000);
+  }
+  if(!d||isNaN(d.getTime()))return String(v);
   return`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
 }
 
-function genderAbbr(g){
-  if(!g)return'';
-  const u=String(g).toUpperCase().trim();
-  if(u==='MALE'||u==='M')return'M';
-  if(u==='FEMALE'||u==='F'||u==='FEM')return'F';
-  return u;
+// Format input date (YYYY-MM-DD) to "DD Month YYYY" for result header
+function fmtDateLong(v){
+  if(!v)return'';
+  const d=new Date(v);
+  if(isNaN(d))return v;
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-// ══════════════════════════════════════════════════
-// SHEET BUILDERS
-// ══════════════════════════════════════════════════
-function buildAttSheet(inst,students,cfg,c,label,time,isPrac,isTying){
-  const aoa=[];
-  const COLS=15;
-  const blank=()=>Array(COLS).fill('');
+function genderAbbr(g){
+  const u=String(g||'').toUpperCase().trim();
+  if(u==='MALE'||u==='M')return'M';
+  if(u==='FEMALE'||u==='F'||u==='FEM')return'F';
+  return u||'';
+}
 
-  const r0=blank();r0[1]=`Institute: ${inst}`;aoa.push(r0);
-  const cLabel=label?`NSQF Course: "${c.name} (${label})"` :`NSQF Course: "${c.name}"`;
-  const r1=blank();r1[1]=cLabel;aoa.push(r1);
-  const r2=blank();
-  r2[1]='SCHEME: NSQF';r2[3]='BATCH:';r2[7]='START DATE:';r2[9]='END DATE:';r2[12]=`EXAM CYCLE: ${cfg.cy}`;
-  aoa.push(r2);
+// Format a time value or string for display (e.g. "09:30:00" or "12 noon")
+function fmtTime(v){
+  if(!v)return'';
+  const s=String(v).trim();
+  if(s.toLowerCase().includes('noon')||s.toLowerCase().includes('12:00'))return'12 noon';
+  return s;
+}
+
+// ── SHEET BUILDERS ────────────────────────────────────────
+// Builds a proper styled workbook sheet using aoa_to_sheet
+// All sheets match the exact layout seen in the reference files.
+
+function buildAttSheet(inst, students, cfg, c, labelSuffix, time, sheetType){
+  // sheetType: 'theory1' | 'theory2' | 'practical' | 'typing'
+  const isPrac   = sheetType==='practical';
+  const isTyping = sheetType==='typing';
+  const aoa=[];
+
+  // Row 1: Institute
+  aoa.push([`Institute: ${inst}`]);
+  // Row 2: Course name + label
+  const suffix = labelSuffix ? ` (${labelSuffix})` : '';
+  aoa.push([`NSQF Course: "${c.name}${suffix}"`]);
+  // Row 3: Scheme / Batch / Cycle
+  const cycleStr=`EXAM CYCLE: ${cfg.cy||''}`;
+  if(isPrac||isTyping){
+    aoa.push(['SCHEME:NSQF','','BATCH:','','','START DATE:                                    END DATE:','','','','','','','',cycleStr]);
+  } else {
+    aoa.push(['SCHEME:NSQF','','BATCH:','','','START DATE:                                    END DATE:','','','','','',cycleStr]);
+  }
 
   if(isPrac){
-    aoa.push(['Sno','Roll Number','Registration No','Candidate Name','Gender','Father Name','Mother Name','Candidate DOB','Exam Date','Exam Time','Practical Examination Attendance\n(Candidates Signature)','Practical Awards','','','']);
+    // Row 4: headers
+    aoa.push(['Sno','Roll_Number','Candidate_registration_no','Candidate_Name',' Gender','Father_Name','Mother_Name','Candidate_   DOB','Exam_Date','Exam Time','Practical Examination Attendance\n(Candidates Signature)','Practical Awards','','','']);
+    // Row 5: sub-headers
     aoa.push(['','','','','','','','','','','','Marks-1\n\n(30)','Marks-2\n\n(30)','Marks-3\n\n(30)','Total Marks\n(90)']);
+    // Data rows
     students.forEach((s,j)=>{
       aoa.push([j+1,s['Roll_Number'],s['Candidate_registration_no'],s['Candidate_Name'],
         genderAbbr(s['Candidate_Gender']),s['Father_Name'],s['Mother_Name']||'',
-        fmtDate(s['Candidate_Birth_date']),cfg.pd,time,'','','','','']);
+        fmtDate(s['Candidate_Birth_date']),fmtDate(cfg.pd)||'',fmtTime(time),'','','','','']);
     });
-  } else if(isTying){
-    aoa.push(['Sno','Roll Number','Registration No','Candidate Name','Gender','Father Name','Mother Name','Candidate DOB','Exam Date','Exam Time','Typing / Speed Test Attendance\n(Candidates Signature)','Speed Test Awards','','','']);
+  } else if(isTyping){
+    aoa.push(['Sno','Roll_Number','Candidate_registration_no','Candidate_Name',' Gender','Father_Name','Mother_Name','Candidate_   DOB','Exam_Date','Exam Time','Typing / Speed Test Attendance\n(Candidates Signature)','Speed Test Awards','','','']);
     aoa.push(['','','','','','','','','','','','Marks Obtained\n(60)','','','Data Entry Speed\n(WPM)']);
     students.forEach((s,j)=>{
       aoa.push([j+1,s['Roll_Number'],s['Candidate_registration_no'],s['Candidate_Name'],
         genderAbbr(s['Candidate_Gender']),s['Father_Name'],s['Mother_Name']||'',
-        fmtDate(s['Candidate_Birth_date']),cfg.tyd||cfg.pd,cfg.tyt||'15:00:00','','','','','']);
+        fmtDate(s['Candidate_Birth_date']),fmtDate(cfg.tyd)||fmtDate(cfg.pd)||'',fmtTime(cfg.tyt||'15:00:00'),'','','','','']);
     });
   } else {
-    aoa.push(['Sno','Roll Number','Registration No','Candidate Name','Gender','Father Name','Mother Name','Candidate DOB','Exam Date','Exam Time','Theory Examination Attendance\n(Candidates Signature)']);
-    aoa.push([]);
+    // Theory
+    aoa.push(['Sno','Roll_Number','Candidate_registration_no','Candidate_Name',' Gender','Father_Name','Mother_Name','Candidate_   DOB','Exam_Date','Exam Time','Theory Examination Attendance\n(Candidates Signature)']);
+    aoa.push([]); // blank row between header and data (matches reference)
     students.forEach((s,j)=>{
       aoa.push([j+1,s['Roll_Number'],s['Candidate_registration_no'],s['Candidate_Name'],
         genderAbbr(s['Candidate_Gender']),s['Father_Name'],s['Mother_Name']||'',
-        fmtDate(s['Candidate_Birth_date']),cfg.td,time]);
+        fmtDate(s['Candidate_Birth_date']),fmtDate(cfg.td)||'',fmtTime(time)]);
     });
   }
 
-  aoa.push(blank());
-  const sf=blank();sf[8]='Invigilator Signature:';sf[12]='Examiner Signature:';aoa.push(sf);
-  const sf2=blank();sf2[8]='(Name & Designation)';sf2[12]='(Name & Designation)';aoa.push(sf2);
-  aoa.push(blank());
-  const sf3=blank();sf3[1]='Centre Incharge / Principal Signature:';sf3[9]='Date:';aoa.push(sf3);
-  const sf4=blank();sf4[1]='(Name, Designation & Official Seal)';aoa.push(sf4);
+  // Footer rows
+  aoa.push([]);
+  if(isPrac||isTyping){
+    const f1=['','','','','','','','','Invigilator Signature:','','','','Examiner Signature:','',''];
+    const f2=['','','','','','','','','(Name & Designation)','','','','(Name & Designation)','',''];
+    aoa.push(f1,f2,[]);
+    const f3=['','Centre Incharge / Principal Signature:','','','','','','','','Date:','','','','',''];
+    const f4=['','(Name, Designation & Official Seal)','','','','','','','','','','','','',''];
+    aoa.push(f3,f4);
+  } else {
+    aoa.push(['','','','','','','','','Invigilator Signature:','','Examiner Signature:']);
+    aoa.push(['','','','','','','','','(Name & Designation)','','(Name & Designation)']);
+    aoa.push([]);
+    aoa.push(['','Centre Incharge / Principal Signature:','','','','','','','','Date:']);
+    aoa.push(['','(Name, Designation & Official Seal)']);
+  }
 
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  const colw=isPrac||isTying
-    ?[4,18,15,22,7,20,18,12,13,10,32,11,11,11,14]
-    :[4,18,15,22,7,20,18,12,13,10,34];
-  ws['!cols']=colw.map(w=>({wch:w}));
-  ws['!merges']=[
-    {s:{r:0,c:1},e:{r:0,c:14}},
-    {s:{r:1,c:1},e:{r:1,c:14}},
-    {s:{r:2,c:12},e:{r:2,c:14}},
-  ];
+
+  // Column widths
+  if(isPrac||isTyping){
+    ws['!cols']=[4,18,18,22,7,20,18,13,13,11,34,12,12,12,14].map(w=>({wch:w}));
+    // Merges: R1 span all, R2 span all, practical/typing header spans
+    ws['!merges']=[
+      {s:{r:0,c:0},e:{r:0,c:14}},
+      {s:{r:1,c:0},e:{r:1,c:14}},
+      {s:{r:2,c:13},e:{r:2,c:14}}, // cycle label
+      {s:{r:3,c:11},e:{r:3,c:14}}, // "Practical Awards" or "Speed Test Awards" spans cols 11-14
+    ];
+  } else {
+    ws['!cols']=[4,18,18,22,7,20,18,13,13,11,36].map(w=>({wch:w}));
+    ws['!merges']=[
+      {s:{r:0,c:0},e:{r:0,c:10}},
+      {s:{r:1,c:0},e:{r:1,c:10}},
+      {s:{r:2,c:11},e:{r:2,c:11}},
+    ];
+  }
   return ws;
 }
 
-function buildIASheet(inst,students,cfg,c){
+function buildIASheet(inst, students, cfg, c){
   const aoa=[];
-  aoa.push(['',`Institute: ${inst}`,'','','','','','','']);
-  aoa.push(['',`NSQF Course: "${c.name}"`,'','','','','','','']);
-  aoa.push(['','SCHEME:  NSQF','','','BATCH:','START DATE:','','END DATE:',cfg.ed||'']);
-  aoa.push([]);
-  aoa.push(['Sno','Roll Number','Candidate Registration No','Candidate Name','Gender','Father Name','Candidate DOB',c.ia1,c.ia2]);
+  aoa.push([`Institute: ${inst}`]);
+  aoa.push([`NSQF Course: "${c.name} "`]);
+  aoa.push([`SCHEME:  NSQF                BATCH:`,'','','','START DATE:','','','END DATE:',cfg.ed||'']);
+  aoa.push([]); // blank row before headers
+  aoa.push(['Sno','Roll_Number','Registration_no','Name','Gender ','Father_Name','Date Of Birth',c.ia1,c.ia2]);
   students.forEach((s,j)=>{
     aoa.push([j+1,s['Roll_Number'],s['Candidate_registration_no'],s['Candidate_Name'],
       genderAbbr(s['Candidate_Gender']),s['Father_Name'],fmtDate(s['Candidate_Birth_date']),'','']);
@@ -1419,62 +813,77 @@ function buildIASheet(inst,students,cfg,c){
   aoa.push(['','(Name, Designation & Seal)','','','','','','Date:','']);
 
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols']=[4,18,18,22,7,20,12,18,18].map(w=>({wch:w}));
-  ws['!merges']=[{s:{r:0,c:1},e:{r:0,c:8}},{s:{r:1,c:1},e:{r:1,c:8}}];
+  ws['!cols']=[4,18,18,22,7,20,13,20,20].map(w=>({wch:w}));
+  ws['!merges']=[
+    {s:{r:0,c:0},e:{r:0,c:8}},
+    {s:{r:1,c:0},e:{r:1,c:8}},
+  ];
   return ws;
 }
 
-function buildResultSheet(inst,students,cfg,c,tpcode){
+function buildResultSheet(inst, students, cfg, c, tpcode){
   const aoa=[];
-  const dateStr=cfg.td?new Date(cfg.td).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'';
+  const dateStr=cfg.td?fmtDateLong(cfg.td):'';
   const nc=c.spd?17:16;
   const blank=()=>Array(nc).fill('');
 
+  // Header block
   const r0=blank();r0[0]='Statement of Marks List of Assessment carried out by Regional Centre for NSQF aligned Courses';aoa.push(r0);
   const r1=blank();r1[0]='Name of Regional Centre:';r1[3]=cfg.rc||inst;aoa.push(r1);
-  const r2=blank();r2[0]='Course Code :';r2[3]=cfg.cc2;aoa.push(r2);
+  const r2=blank();r2[0]='Course Code :';r2[3]=`    ${cfg.cc2||c.code}                                    `;aoa.push(r2);
   const r3=blank();r3[0]='Course Name :';r3[3]=c.name;aoa.push(r3);
-  const r4=blank();r4[0]='Course Duration :';r4[3]=cfg.dur;aoa.push(r4);
+  const r4=blank();r4[0]='Course Duration :';r4[3]=cfg.dur||c.dur;aoa.push(r4);
   const r5=blank();r5[0]='Dates of Online Examination :';r5[3]=dateStr;aoa.push(r5);
 
-  const ch=['Sl.no','Roll_Number','Registration_no','Candidate_Name','Gender','Father_Name','Mother_Name','Date of Birth',
-    'Name of the Training Partner\n(Accredited Institute)','Code of The Training Partner\n(Accredited Institute)',
-    'Marks Secured By Candidate','','','','',''];
-  if(c.spd)ch.push('');
+  // Column headers row 1
+  const ch=blank();
+  ch[0]='Sl.no';ch[1]='Roll_Number';ch[2]='Registration_no';ch[3]='Candidate_Name';
+  ch[4]='Gender  ';ch[5]='Father_Name ';ch[6]='Mother_Name';ch[7]='Date of Birth';
+  ch[8]='Name of the Training Partner\n(Accredited Institute)';
+  ch[9]='Code of The Training Partner\n(Accredited Institute)';
+  ch[10]='Marks Secured By Candidate';
   aoa.push(ch);
 
+  // Column headers row 2 (marks breakdown)
   const mh=blank();
-  mh[10]=c.p1;mh[11]='Practical 2';mh[12]=c.ia1;mh[13]=c.ia2;mh[14]='Major Project 1';mh[15]='Major Project 2';
-  if(c.spd)mh[16]='Data Entry Speed';
+  mh[10]=c.p1; mh[11]='Practical 2'; mh[12]=c.result_ia1; mh[13]=c.result_ia2;
+  mh[14]='Major Project 1'; mh[15]='Major Project 2';
+  if(c.spd)mh[16]=c.spdLabel||'Data Entry Speed\n(WPM)';
   aoa.push(mh);
 
+  // Data rows
   students.forEach((s,j)=>{
-    const row=[j+1,s['Roll_Number'],s['Candidate_registration_no'],s['Candidate_Name'],
-      genderAbbr(s['Candidate_Gender']),s['Father_Name'],s['Mother_Name']||'',
-      fmtDate(s['Candidate_Birth_date']),inst,tpcode||'','','','','','',''];
-    if(c.spd)row.push('');
+    const row=blank();
+    row[0]=j+1;row[1]=s['Roll_Number'];row[2]=s['Candidate_registration_no'];
+    row[3]=s['Candidate_Name'];row[4]=genderAbbr(s['Candidate_Gender']);
+    row[5]=s['Father_Name'];row[6]=s['Mother_Name']||'';
+    row[7]=fmtDate(s['Candidate_Birth_date']);
+    row[8]=inst;row[9]=tpcode||'';
+    row[10]='';row[11]=c.result_p2||'NA';
+    row[12]='';row[13]='';
+    row[14]=c.result_mp1||'NA';row[15]=c.result_mp2||'NA';
+    if(c.spd)row[16]='';
     aoa.push(row);
   });
 
+  // Footer
   aoa.push(blank());
   const f1=blank();f1[0]='Prepared by:';f1[8]='Verified by:';aoa.push(f1);
   const f2=blank();f2[0]='(Name & Signature)';f2[8]='(Name, Designation & Official Seal)';aoa.push(f2);
   const f3=blank();f3[0]='Date:';f3[8]='Date:';aoa.push(f3);
 
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  const cw=[4,18,15,22,7,20,18,12,36,20,12,10,20,12,12,12];
-  if(c.spd)cw.push(14);
+  const cw=[4,18,16,22,7,20,18,13,36,22,13,11,22,13,14,14];
+  if(c.spd)cw.push(16);
   ws['!cols']=cw.map(w=>({wch:w}));
   ws['!merges']=[
-    {s:{r:0,c:0},e:{r:0,c:nc-1}},
-    {s:{r:6,c:10},e:{r:6,c:nc-1}},
+    {s:{r:0,c:0},e:{r:0,c:nc-1}},    // Title row
+    {s:{r:6,c:10},e:{r:6,c:nc-1}},   // "Marks Secured By Candidate" span
   ];
   return ws;
 }
 
-// ══════════════════════════════════════════════════
-// GENERATE ALL
-// ══════════════════════════════════════════════════
+// ── GENERATE ALL ──────────────────────────────────────────
 async function genAll(){
   document.getElementById('ls').classList.remove('hidden');
   document.getElementById('gb').disabled=true;
@@ -1484,9 +893,14 @@ async function genAll(){
 
   const c=C[S.cid];
   const cfg={
-    cy:gv('cy'),td:gv('td'),pd:gv('pd'),tt:gv('tt'),t2t:gv('t2t'),pt:gv('pt'),
-    tyd:gv('tyd'),tyt:gv('tyt'),bt:gv('bt'),sd:gv('sd'),ed:gv('ed'),
-    rc:gv('rc'),tpc:gv('tpc'),dur:gv('dur')||c.dur,cc2:gv('cc2')||c.code,
+    cy:gv('cy'),td:gv('td'),pd:gv('pd'),
+    tt:gv('tt')||'09:30:00',
+    t2t:gv('t2t')||'12 noon',
+    pt:gv('pt')||'14:00:00',
+    tyd:gv('tyd'),tyt:gv('tyt')||'15:00:00',
+    bt:gv('bt'),sd:gv('sd'),ed:gv('ed'),
+    rc:gv('rc'),tpc:gv('tpc'),
+    dur:gv('dur')||c.dur,cc2:gv('cc2')||c.code,
   };
 
   const total=S.insts.length*3;let done=0;
@@ -1497,28 +911,32 @@ async function genAll(){
     const sts=S.byInst[inst];
     const tpcode=S.insts.length>1?(gv(`tpc-${i}`)||cfg.tpc):cfg.tpc;
     const idSfx=S.insts.length>1?String(i):'';
-    const fSfx=`_${inst.replace(/[\/\s,\.]+/g,'_').replace(/_+/g,'_').substring(0,28)}`;
-    const cy=cfg.cy.replace(/[\/\s]/g,'_');
+    const fSfx=`_${inst.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_').substring(0,28)}`;
+    const cy=(cfg.cy||'').replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_');
 
     log(`${S.insts.length>1?`[${inst.substring(0,30)}] `:''}${sts.length} students`,'warn');
 
-    // 1. ATTENDANCE
+    // 1. ATTENDANCE FILE
     try{
       const wb=XLSX.utils.book_new();
-      if(c.sh==='1T+1P'||c.sh==='1T+1P+TY'){
-        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Theory',cfg.tt,false,false),' Theory ');
-        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Practical Exam',cfg.pt,true,false),'Practical');
-        if(c.sh==='1T+1P+TY')XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Typing / Data Entry Speed Test',cfg.tyt||'15:00:00',false,true),'Typing');
+      if(c.sh==='1T+1P'){
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Theory',cfg.tt,'theory1'),' Theory ');
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Practical Exam',cfg.pt,'practical'),'Practical');
+      } else if(c.sh==='1T+1P+TY'){
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Theory',cfg.tt,'theory1'),' Theory ');
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Practical Exam',cfg.pt,'practical'),'Practical');
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Typing / Data Entry Speed Test',cfg.tyt,'typing'),'Typing');
       } else {
-        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Theory -1',cfg.tt,false,false),' Theory 1');
-        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Theory -2',cfg.t2t||'12 noon',false,false),' Theory 2');
-        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Practical',cfg.pt,true,false),'Practical');
+        // 2T+1P
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Theory -1',cfg.tt,'theory1'),' Theory 1');
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Theory -2',fmtTime(cfg.t2t),'theory2'),' Theory 2');
+        XLSX.utils.book_append_sheet(wb,buildAttSheet(inst,sts,cfg,c,'Practical',cfg.pt,'practical'),'Practical');
       }
       const fn=`${S.cid}_Attendance${fSfx}_${cy}.xlsx`;
       XLSX.writeFile(wb,fn);
       setOK('at'+idSfx);log(`✓ ${fn}`,'ok');
     }catch(e){log(`✗ Attendance: ${e.message}`,'err');setERR('at'+idSfx);}
-    tick();await sleep(160);
+    tick();await sleep(180);
 
     // 2. INTERNAL ASSESSMENT
     try{
@@ -1528,7 +946,7 @@ async function genAll(){
       XLSX.writeFile(wb,fn);
       setOK('ia'+idSfx);log(`✓ ${fn}`,'ok');
     }catch(e){log(`✗ Internal Assessment: ${e.message}`,'err');setERR('ia'+idSfx);}
-    tick();await sleep(160);
+    tick();await sleep(180);
 
     // 3. COMPILED RESULT
     try{
@@ -1538,7 +956,7 @@ async function genAll(){
       XLSX.writeFile(wb,fn);
       setOK('rs'+idSfx);log(`✓ ${fn}`,'ok');
     }catch(e){log(`✗ Result: ${e.message}`,'err');setERR('rs'+idSfx);}
-    tick();await sleep(160);
+    tick();await sleep(180);
   }
 
   prog(100);
