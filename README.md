@@ -1,96 +1,186 @@
-# 📊 NSQF Excel Generator — NIELIT Ropar
+# NSQF Exam Document Generator — NIELIT Ropar
 
-<img src="img/logo.png" width="200">
-
-![Version](https://img.shields.io/badge/version-2.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Environment](https://img.shields.io/badge/environment-Client--Side-orange.svg)
-
-A client-side web application designed to automate the generation of official examination documents for National Skills Qualifications Framework (NSQF) courses at **NIELIT Ropar** (National Institute of Electronics & Information Technology). 
+Production-ready Flask application that auto-generates exam documents
+(Theory/Practical Attendance, Internal Assessment, Compiled Result HQ)
+for all 12 NSQF courses via Template-Based Injection.
 
 ---
 
-## 💡 What are we doing?
+## Quick Start
 
-The **NSQF Excel Generator** is a streamlined, 4-step web tool that takes a raw "RO" (Registration/Roll-out) Excel file containing student data and automatically formats it into standardized, ready-to-print examination files. 
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
 
-For every institute found in the uploaded data, the tool generates three specific Excel workbooks:
-1. **Attendance Sheets** (Separated into Theory, Practical, and Typing tests depending on the course scheme).
-2. **Internal Assessment Templates** (For logging internal marks).
-3. **Compiled Result (HQ) Sheets** (A master sheet for final score compilation).
+# 2. Add your formatted .xlsx templates into templates/xlsx/
+#    (see "Template File Naming" below)
 
-## 🤔 Why did we build this?
+# 3. Run
+python app.py
 
-Preparing examination documentation for NSQF courses manually is incredibly tedious and prone to human error. Administrators typically have to copy-paste student names, roll numbers, and registration details from a master database into multiple different templates. 
-
-**The core problems this solves:**
-* **Time Consumption:** Manually separating students by institute and formatting their details into different sheets takes hours. This tool does it in seconds.
-* **Format Consistency:** Ensures every attendance sheet and result sheet strictly follows the formatting required by NIELIT HQ.
-* **Data Privacy & Security:** Educational data is highly sensitive. Because this application relies entirely on client-side JavaScript (using the user's browser), **no student data is ever uploaded to a server**. Everything is processed locally on the user's machine.
+# 4. Open http://localhost:5000
+```
 
 ---
 
-## ✨ Key Features
+## Project Structure
 
-* **🛡️ 100% Local Processing:** Uses `FileReader` and SheetJS to read and write Excel files directly in the browser. Zero server uploads.
-* **🏫 Multi-Institute Handling:** Automatically detects if a master Excel file contains students from multiple institutes/venues and generates a separate batch of files for each one.
-* **📚 12 Pre-Configured Courses:** Fully supports 12 NSQF courses (e.g., *Essentials of AI*, *Full Stack Development*, *Data Entry*). It automatically knows the exam scheme (e.g., 2 Theory + 1 Practical vs. 1 Theory + 1 Practical + Typing) and adjusts the generated sheets accordingly.
-* **⚡ Smart Auto-Fill:** Automatically extracts exam dates, practical dates, and batch timings from the uploaded RO file to save manual data entry.
-* **🌗 Modern UI/UX:** Features a responsive design, drag-and-drop file uploading, an intuitive 4-step wizard, and a Light/Dark mode toggle.
-
----
-
-## 🚀 How to Use (The 4-Step Workflow)
-
-### Step 1: Select NSQF Course
-Click on the specific course you are generating files for. The system will load the respective course codes, duration (e.g., 120 Hrs, 360 Hrs), and examination scheme requirements in the background.
-
-### Step 2: Upload RO Data File
-Drag and drop your raw `.xlsx` or `.xls` RO file into the drop zone. The app will immediately parse the file, identify the number of students, split them by their respective institutes, and show a preview table of the extracted data.
-
-### Step 3: Configure Details
-Verify the examination schedule. The app will attempt to auto-fill these fields from your Excel file:
-* Exam Cycle (e.g., March 2026)
-* Theory & Practical Exam Dates/Times
-* Regional Centre Name & TP (Training Partner) Codes.
-*(Note: If multiple institutes are detected, you will be prompted to enter a specific TP Code for each).*
-
-### Step 4: Generate & Download
-Review the generation summary. Click the **"⚡ Generate All Excel Files"** button. The app will compile the data and trigger an automatic download of the completed `.xlsx` files straight to your computer's `Downloads` folder.
+```
+nsqf_app/
+├── app.py                  ← Flask application (main entry point)
+├── requirements.txt
+├── README.md
+└── templates/
+    ├── index.html          ← Upload UI (auto-served by Flask)
+    └── xlsx/               ← ⚠️  Place ALL your .xlsx templates here
+        ├── I091_theory_attendance.xlsx
+        ├── I091_practical_attendance.xlsx
+        ├── I091_internal_assessment.xlsx
+        ├── I091_compiled_result_hq.xlsx
+        ├── I092_*.xlsx
+        ├── ... (see full list below)
+```
 
 ---
 
-## 🛠️ Technical Stack
+## Template File Naming Convention
 
-This project is built to be as lightweight and portable as possible. It requires no backend, no databases, and no complex build steps.
+All templates go in `templates/xlsx/`. Filenames are **case-sensitive**.
 
-* **Frontend Structure:** HTML5
-* **Styling:** Vanilla CSS (Custom UI with CSS Variables, Flexbox, and CSS Grid)
-* **Logic:** Vanilla JavaScript (ES6)
-* **Excel Processing Library:** [SheetJS (xlsx.full.min.js)](https://sheetjs.com/) - Used for parsing the uploaded `.xlsx` files and constructing the new workbooks from arrays of arrays (`aoa_to_sheet`).
-* **Fonts:** Google Fonts (*Outfit* for UI text, *DM Mono* for tabular data).
+### Single-module courses (1 Theory + 1 Practical)
+
+| Course | Files needed |
+|--------|-------------|
+| I091 — Essentials of AI | `I091_theory_attendance.xlsx`, `I091_practical_attendance.xlsx`, `I091_internal_assessment.xlsx`, `I091_compiled_result_hq.xlsx` |
+| I092 — Cloud Computing | `I092_*.xlsx` (same pattern) |
+| I081 — Data Curation (Python) | `I081_*.xlsx` |
+| I079 — Data Annotation (Python) | `I079_*.xlsx` |
+| I060 — Comp. App, Accounting & Publishing | `I060_*.xlsx` |
+
+### I059 — Certified Data Entry (has Typing sheet)
+
+```
+I059_theory_attendance.xlsx
+I059_practical_attendance.xlsx
+I059_typing_attendance.xlsx       ← extra typing test sheet
+I059_internal_assessment.xlsx
+I059_compiled_result_hq.xlsx
+```
+
+### Two-theory-module courses (M1 + M2 theory sheets)
+
+| Course | Files needed |
+|--------|-------------|
+| I090 — Full Stack Dev | `I090_theory1_attendance.xlsx`, `I090_theory2_attendance.xlsx`, `I090_practical_attendance.xlsx`, `I090_internal_assessment.xlsx`, `I090_compiled_result_hq.xlsx` |
+| I077 — Multimedia Dev | `I077_*.xlsx` (same pattern) |
+| I078 — ITeS BPO Voice | `I078_*.xlsx` |
+| E063 — Asst. Computer Technician | `E063_*.xlsx` |
+| E058 — IoT Assistant | `E058_*.xlsx` |
+| E059 — IoT Associate | `E059_*.xlsx` |
 
 ---
 
-## 📦 Installation & Setup
+## Cell Injection Mapping (per template type)
 
-Because this is a static, client-side application, installation is virtually zero.
+### Theory / Practical Attendance
+| Cell | Value |
+|------|-------|
+| B1   | Institute Name |
+| B2   | Course Name |
+| H3   | Exam Cycle (first Exam Date in batch) |
+| Row 5+ | Student data (Theory) |
+| Row 6+ | Student data (Practical) |
 
-1. Clone or download this repository.
-2. Ensure you have the `index.html` file and the `img/logo.png` in their respective directories.
-3. Simply double-click `index.html` to open it in any modern web browser (Chrome, Edge, Firefox, Safari).
-4. *Requires an active internet connection only upon first load to fetch the Google Fonts and the SheetJS CDN.*
+Row columns: A=S.No, B=Roll, C=RegNo, D=Name, E=Gender(initial), F=Father, G=Mother, H=DOB, I=ExamDate, J=ExamTime  
+Practical adds blank K–N columns (physical signature/marks).
+
+### Typing Attendance (I059 only)
+Same as Theory but: G=DOB (no Mother column), H=ExamDate, I=ExamTime. J–L blank.
+
+### Internal Assessment
+| Cell | Value |
+|------|-------|
+| B1 | Institute Name |
+| B2 | Course Name |
+| Row 5+ | A=SNo, B=Roll, C=RegNo, D=Name, E=Gender, F=Father, G=DOB |
+
+### Compiled Result HQ
+| Cell | Value |
+|------|-------|
+| D2 | Institute Name |
+| D4 | Course Name |
+| Row 9+ | A=SNo, B=Roll, C=RegNo, D=Name, E=Gender, F=Father, G=Mother, H=DOB |
 
 ---
 
-## 📂 Generated File Structure
+## Input CSV Schema
 
-When you hit generate, the application utilizes the following naming conventions for the downloaded files:
+All 12 columns are required:
 
-* `{CourseCode}_Attendance_{InstituteName}_{Cycle}.xlsx`
-* `{CourseCode}_Internal_Assessment_{InstituteName}_{Cycle}.xlsx`
-* `{CourseCode}_Compiled_Result_HQ_{InstituteName}.xlsx`
+| Column | Description |
+|--------|-------------|
+| `Course_name` | Course ID (`I091`) or full label |
+| `Module_Short_Name` | `M1` / `M2` — for multi-module courses |
+| `Candidate_registration_no` | NIELIT reg. number |
+| `Candidate_Name` | Full candidate name |
+| `Candidate_Gender` | Male/Female or M/F |
+| `Father_Name` | Father's full name |
+| `Mother_Name` | Mother's full name |
+| `Candidate_Birth_date` | Date of birth |
+| `Institute_Name` | Affiliated institute |
+| `Roll_Number` | Exam roll number |
+| `Exam Date` | Scheduled date |
+| `Exam Time` | Scheduled time |
 
-## 👨‍💻 Maintainers
+### Multi-course CSVs
+A single CSV can contain **multiple courses and institutes**. The app
+groups by `(Institute_Name, Course_name)` and generates separate
+document sets for each group. Files are organised in the ZIP by institute folder.
 
-Developed for **NIELIT Ropar** (National Institute of Electronics and Information Technology) to streamline administrative workflows for NSQF examinations.
+---
+
+## Output ZIP Structure
+
+```
+NSQF_Documents.zip
+├── NIELIT_Ropar/
+│   ├── NIELIT_Ropar_I091_Theory_Attendance.xlsx
+│   ├── NIELIT_Ropar_I091_Practical_Attendance.xlsx
+│   ├── NIELIT_Ropar_I091_Internal_Assessment.xlsx
+│   └── NIELIT_Ropar_I091_Compiled_Result_HQ.xlsx
+├── Another_Institute/
+│   └── ...
+└── UNRECOGNISED_COURSES.txt   ← only present if unknown course names found
+```
+
+---
+
+## API Endpoints
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | `/` | Upload UI |
+| POST | `/generate` | Process CSV → return ZIP |
+| GET | `/courses` | JSON list of all registered courses |
+
+### POST /generate — error responses
+
+```json
+// 400 — missing columns
+{ "error": "CSV is missing required columns.", "missing_columns": ["Roll_Number"] }
+
+// 400 — no recognised courses
+{ "error": "No recognised courses found in CSV.", "unrecognised_courses": ["XYZ999"] }
+
+// 500 — no files generated (templates missing)
+{ "error": "No documents were generated. Verify that templates exist..." }
+```
+
+---
+
+## Adding a New Course
+
+1. Add an entry to `COURSE_REGISTRY` in `app.py`
+2. Add corresponding entries to `COURSE_META` in `templates/index.html`
+3. Place the template `.xlsx` files in `templates/xlsx/`
+4. No other changes needed.

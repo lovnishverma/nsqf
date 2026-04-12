@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>NSQF Document Generator — NIELIT Ropar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-900: #042C53;
+      --blue-800: #0C447C;
+      --blue-600: #185FA5;
+      --blue-400: #378ADD;
+      --blue-100: #B5D4F4;
+      --blue-50:  #E6F1FB;
+      --gray-900: #1a1a2e;
+      --gray-700: #2d3748;
+      --gray-500: #64748b;
+      --gray-300: #cbd5e1;
+      --gray-100: #f1f5f9;
+      --gray-50:  #f8fafc;
+      --white:    #ffffff;
+      --green-600:#0F6E56;
+      --green-50: #E1F5EE;
+      --red-600:  #993C1D;
+      --red-50:   #FAECE7;
+      --amber-600:#854F0B;
+      --amber-50: #FAEEDA;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-900);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--blue-900);
+      color: var(--white);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      width: 40px; height: 40px;
+      background: var(--blue-400);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 15px; letter-spacing: -.5px; flex-shrink: 0;
+    }
+    .header-text h1 { font-size: 15px; font-weight: 600; letter-spacing: -.2px; }
+    .header-text p  { font-size: 11px; opacity: .6; margin-top: 1px; }
+    .header-badge {
+      font-size: 10px; font-weight: 500; letter-spacing: .05em;
+      padding: 4px 10px; border-radius: 20px;
+      background: rgba(55,138,221,.25); color: var(--blue-100);
+      border: 1px solid rgba(55,138,221,.3);
+    }
+
+    /* ── Layout ── */
+    main { flex: 1; display: flex; gap: 0; max-width: 1200px; width: 100%; margin: 0 auto; padding: 28px 24px 60px; }
+
+    /* ── Left panel: steps ── */
+    .panel-left { width: 260px; flex-shrink: 0; margin-right: 24px; }
+
+    .steps { position: sticky; top: 88px; }
+    .step {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-300);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: var(--white); border: 1.5px solid var(--gray-300);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; color: var(--gray-500);
+      transition: all .2s;
+    }
+    .step.active .step-num { background: var(--blue-600); border-color: var(--blue-600); color: var(--white); }
+    .step.done .step-num { background: var(--green-600); border-color: var(--green-600); color: var(--white); }
+    .step-body h3 { font-size: 13px; font-weight: 600; color: var(--gray-900); margin-bottom: 2px; }
+    .step-body p  { font-size: 11.5px; color: var(--gray-500); line-height: 1.5; }
+
+    /* ── Right panel: main content ── */
+    .panel-right { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--gray-500); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title::after { content: ''; flex: 1; height: 1px; background: var(--gray-300); }
+
+    /* ── Course grid ── */
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .course-card {
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s, box-shadow .15s;
+      position: relative;
+      background: var(--white);
+    }
+    .course-card:hover { border-color: var(--blue-400); box-shadow: var(--shadow-sm); }
+    .course-card.selected {
+      border-color: var(--blue-600); border-width: 2px;
+      background: var(--blue-50);
+    }
+    .course-card .c-icon {
+      font-size: 22px; margin-bottom: 10px; display: block;
+      line-height: 1;
+    }
+    .course-card .c-code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; font-weight: 500;
+      color: var(--blue-600); letter-spacing: .04em;
+      background: var(--blue-50); border: 1px solid var(--blue-100);
+      padding: 2px 7px; border-radius: 4px; display: inline-block;
+      margin-bottom: 7px;
+    }
+    .course-card.selected .c-code { background: var(--white); }
+    .course-card .c-name { font-size: 12.5px; font-weight: 500; line-height: 1.35; color: var(--gray-900); }
+    .course-card .c-meta { font-size: 11px; color: var(--gray-500); margin-top: 6px; }
+    .course-card .c-check {
+      position: absolute; top: 10px; right: 10px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--blue-600);
+      display: none; align-items: center; justify-content: center;
+    }
+    .course-card .c-check svg { width: 10px; height: 10px; }
+    .course-card.selected .c-check { display: flex; }
+
+    /* ── Template list ── */
+    .tpl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .tpl-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+    }
+    .tpl-icon {
+      width: 30px; height: 30px; border-radius: var(--radius-sm); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+    }
+    .tpl-icon.theory   { background: var(--blue-50);  color: var(--blue-600); }
+    .tpl-icon.prac     { background: var(--green-50); color: var(--green-600); }
+    .tpl-icon.typing   { background: var(--amber-50); color: var(--amber-600); }
+    .tpl-icon.internal { background: #fbeaf0; color: #993556; }
+    .tpl-icon.compiled { background: #ede9fe; color: #534AB7; }
+    .tpl-body { min-width: 0; }
+    .tpl-label { font-weight: 500; color: var(--gray-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tpl-file  { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--gray-500); margin-top: 1px; word-break: break-all; }
+    .tpl-status { flex-shrink: 0; font-size: 10px; padding: 2px 7px; border-radius: 12px; }
+    .tpl-status.ok      { background: var(--green-50); color: var(--green-600); }
+    .tpl-status.missing { background: var(--red-50); color: var(--red-600); }
+
+    /* ── Drop zone ── */
+    .drop-zone {
+      border: 2px dashed var(--gray-300);
+      border-radius: var(--radius-md);
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--blue-400); background: var(--blue-50);
+    }
+    .drop-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .drop-zone .dz-icon  { font-size: 32px; margin-bottom: 10px; }
+    .drop-zone .dz-main  { font-size: 14px; font-weight: 500; color: var(--gray-900); }
+    .drop-zone .dz-hint  { font-size: 12px; color: var(--gray-500); margin-top: 5px; }
+    .drop-zone .dz-fname { font-size: 13px; font-weight: 600; color: var(--blue-600); margin-top: 10px; word-break: break-all; }
+
+    /* ── CSV columns reference ── */
+    .col-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .col-table th { background: var(--gray-50); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--gray-300); color: var(--gray-500); font-weight: 600; font-size: 11px; letter-spacing: .03em; text-transform: uppercase; }
+    .col-table td { padding: 7px 12px; border-bottom: 1px solid var(--gray-100); }
+    .col-table tr:last-child td { border-bottom: none; }
+    .col-table .col-name { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--blue-800); }
+    .col-table .req { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-400); }
+
+    /* ── Submit ── */
+    .btn-row { display: flex; gap: 10px; margin-top: 20px; align-items: center; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 22px; font-size: 13px; font-weight: 600;
+      border-radius: var(--radius-sm); cursor: pointer; border: 1.5px solid transparent;
+      font-family: inherit; transition: all .15s;
+    }
+    .btn-primary { background: var(--blue-800); color: var(--white); }
+    .btn-primary:hover { background: var(--blue-600); }
+    .btn-primary:active { transform: scale(.98); }
+    .btn-primary:disabled { background: var(--gray-300); color: var(--gray-500); cursor: not-allowed; transform: none; }
+    .btn-ghost { background: transparent; color: var(--gray-700); border-color: var(--gray-300); }
+    .btn-ghost:hover { background: var(--gray-100); }
+    .btn-ghost:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Spinner ── */
+    .spinner { display: none; width: 18px; height: 18px; border: 2.5px solid var(--gray-300); border-top-color: var(--blue-600); border-radius: 50%; animation: spin .7s linear infinite; }
+    .spinner.show { display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Alerts ── */
+    .alert { border-radius: var(--radius-md); padding: 14px 16px; font-size: 13px; margin-top: 16px; display: none; line-height: 1.6; }
+    .alert.show { display: block; }
+    .alert.success { background: var(--green-50); border: 1px solid #9FE1CB; color: var(--green-600); }
+    .alert.error   { background: var(--red-50); border: 1px solid #F5C4B3; color: var(--red-600); }
+    .alert pre { font-family: 'IBM Plex Mono', monospace; font-size: 11px; margin-top: 8px; white-space: pre-wrap; word-break: break-word; }
+
+    /* ── Accordion ── */
+    details { border: 1px solid var(--gray-300); border-radius: var(--radius-md); overflow: hidden; }
+    details summary { padding: 12px 18px; background: var(--gray-50); font-size: 12px; font-weight: 600; color: var(--gray-700); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+    details summary::-webkit-details-marker { display: none; }
+    details summary .arr { font-size: 10px; color: var(--gray-500); margin-right: 4px; transition: transform .2s; }
+    details[open] summary .arr { transform: rotate(90deg); }
+    details .acc-body { padding: 16px 18px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      main { flex-direction: column; padding: 16px; }
+      .panel-left { width: 100%; margin-right: 0; }
+      .steps { position: static; display: flex; gap: 0; border: 1px solid var(--gray-300); border-radius: var(--radius-md); overflow: hidden; background: var(--white); }
+      .step { flex: 1; border-bottom: none; border-right: 1px solid var(--gray-300); padding: 10px 12px; }
+      .step:last-child { border-right: none; }
+      .step-body p { display: none; }
+    }
+
+    footer { text-align: center; font-size: 11px; color: var(--gray-500); padding: 16px; border-top: 1px solid var(--gray-300); background: var(--white); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo">NR</div>
+    <div class="header-text">
+      <h1>NSQF Document Generator</h1>
+      <p>National Institute of Electronics &amp; Information Technology — Ropar</p>
+    </div>
+  </div>
+  <span class="header-badge">INTERNAL TOOL</span>
+</header>
+
+<main>
+  <!-- Left: steps sidebar -->
+  <div class="panel-left">
+    <div class="steps">
+      <div class="step active" id="step1-el">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Select course</h3>
+          <p>Choose the NSQF course code for this exam batch.</p>
+        </div>
+      </div>
+      <div class="step" id="step2-el">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Check templates</h3>
+          <p>Verify all required .xlsx templates are in place.</p>
+        </div>
+      </div>
+      <div class="step" id="step3-el">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Upload CSV</h3>
+          <p>Upload the raw candidate data export.</p>
+        </div>
+      </div>
+      <div class="step" id="step4-el">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Generate &amp; download</h3>
+          <p>Download the ZIP with all exam documents.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: content panels -->
+  <div class="panel-right">
+
+    <!-- Step 1: Course selector -->
+    <div class="card" id="card-course">
+      <div class="card-title">Step 1 — Select NSQF course</div>
+      <div class="course-grid" id="courseGrid"></div>
+    </div>
+
+    <!-- Step 2: Template list -->
+    <div class="card" id="card-templates" style="display:none">
+      <div class="card-title">Step 2 — Required templates for <span id="selCourseName" style="color:var(--blue-800)">—</span></div>
+      <p style="font-size:12.5px;color:var(--gray-500);margin-bottom:14px;">
+        Place these files in <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--gray-100);padding:2px 6px;border-radius:4px;">templates/xlsx/</code> before generating.
+      </p>
+      <div class="tpl-grid" id="tplGrid"></div>
+    </div>
+
+    <!-- Step 3: Upload -->
+    <div class="card" id="card-upload" style="display:none">
+      <div class="card-title">Step 3 — Upload candidate CSV</div>
+
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="csvFile" accept=".csv"/>
+        <div class="dz-icon">📂</div>
+        <div class="dz-main">Click to browse or drag &amp; drop</div>
+        <div class="dz-hint">CSV file only · max 16 MB</div>
+        <div class="dz-fname" id="fileName"></div>
+      </div>
+
+      <details style="margin-top:16px;">
+        <summary><span class="arr">▶</span> Required CSV column schema</summary>
+        <div class="acc-body">
+          <table class="col-table">
+            <thead><tr><th></th><th>Column name</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span class="req"></span></td><td class="col-name">Course_name</td><td>Course ID (e.g. I091) or full label</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Module_Short_Name</td><td>M1 / M2 — used for multi-module courses</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Candidate_registration_no</td><td>NIELIT registration number</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Candidate_Name</td><td>Full name of candidate</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Candidate_Gender</td><td>Male / Female  or  M / F</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Father_Name</td><td>Father's full name</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Mother_Name</td><td>Mother's full name</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Candidate_Birth_date</td><td>Date of birth</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Institute_Name</td><td>Affiliated institute name</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Roll_Number</td><td>Exam roll number</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Exam Date</td><td>Scheduled exam date</td></tr>
+              <tr><td><span class="req"></span></td><td class="col-name">Exam Time</td><td>Scheduled exam time</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="submitBtn" disabled onclick="submitForm()">
+          ⚙ &nbsp;Generate &amp; Download ZIP
+        </button>
+        <div class="spinner" id="spinner"></div>
+        <span id="statusText" style="font-size:12px;color:var(--gray-500)"></span>
+      </div>
+
+      <div class="alert success" id="alertSuccess">
+        ✅ &nbsp;Documents generated successfully. Your download should start automatically.
+      </div>
+      <div class="alert error" id="alertError"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer>NIELIT Ropar · NSQF Automation · Internal Use Only</footer>
+
+<script>
+const COURSES = {{ courses | tojson }};
+
+const COURSE_META = {
+  "I091": {icon:"🤖", docs:[{t:"Theory",    cls:"theory",   file:"I091_theory_attendance.xlsx"},    {t:"Practical", cls:"prac", file:"I091_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I091_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I091_compiled_result_hq.xlsx"}]},
+  "I092": {icon:"☁️", docs:[{t:"Theory",    cls:"theory",   file:"I092_theory_attendance.xlsx"},    {t:"Practical", cls:"prac", file:"I092_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I092_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I092_compiled_result_hq.xlsx"}]},
+  "I081": {icon:"🐍", docs:[{t:"Theory",    cls:"theory",   file:"I081_theory_attendance.xlsx"},    {t:"Practical", cls:"prac", file:"I081_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I081_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I081_compiled_result_hq.xlsx"}]},
+  "I079": {icon:"🏷️", docs:[{t:"Theory",    cls:"theory",   file:"I079_theory_attendance.xlsx"},    {t:"Practical", cls:"prac", file:"I079_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I079_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I079_compiled_result_hq.xlsx"}]},
+  "I059": {icon:"📊", docs:[{t:"Theory",    cls:"theory",   file:"I059_theory_attendance.xlsx"},    {t:"Practical", cls:"prac", file:"I059_practical_attendance.xlsx"},{t:"Typing",cls:"typing",file:"I059_typing_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I059_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I059_compiled_result_hq.xlsx"}]},
+  "I060": {icon:"📒", docs:[{t:"Theory",    cls:"theory",   file:"I060_theory_attendance.xlsx"},    {t:"Practical", cls:"prac", file:"I060_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I060_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I060_compiled_result_hq.xlsx"}]},
+  "I090": {icon:"💻", docs:[{t:"Theory M1", cls:"theory",   file:"I090_theory1_attendance.xlsx"},   {t:"Theory M2", cls:"theory", file:"I090_theory2_attendance.xlsx"},{t:"Practical", cls:"prac", file:"I090_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I090_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I090_compiled_result_hq.xlsx"}]},
+  "I077": {icon:"🎨", docs:[{t:"Theory M1", cls:"theory",   file:"I077_theory1_attendance.xlsx"},   {t:"Theory M2", cls:"theory", file:"I077_theory2_attendance.xlsx"},{t:"Practical", cls:"prac", file:"I077_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I077_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I077_compiled_result_hq.xlsx"}]},
+  "I078": {icon:"📞", docs:[{t:"Theory M1", cls:"theory",   file:"I078_theory1_attendance.xlsx"},   {t:"Theory M2", cls:"theory", file:"I078_theory2_attendance.xlsx"},{t:"Practical", cls:"prac", file:"I078_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"I078_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"I078_compiled_result_hq.xlsx"}]},
+  "E063": {icon:"🔧", docs:[{t:"Theory M1", cls:"theory",   file:"E063_theory1_attendance.xlsx"},   {t:"Theory M2", cls:"theory", file:"E063_theory2_attendance.xlsx"},{t:"Practical", cls:"prac", file:"E063_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"E063_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"E063_compiled_result_hq.xlsx"}]},
+  "E058": {icon:"📡", docs:[{t:"Theory M1", cls:"theory",   file:"E058_theory1_attendance.xlsx"},   {t:"Theory M2", cls:"theory", file:"E058_theory2_attendance.xlsx"},{t:"Practical", cls:"prac", file:"E058_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"E058_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"E058_compiled_result_hq.xlsx"}]},
+  "E059": {icon:"🔌", docs:[{t:"Theory M1", cls:"theory",   file:"E059_theory1_attendance.xlsx"},   {t:"Theory M2", cls:"theory", file:"E059_theory2_attendance.xlsx"},{t:"Practical", cls:"prac", file:"E059_practical_attendance.xlsx"},{t:"Internal", cls:"internal", file:"E059_internal_assessment.xlsx"},{t:"Compiled HQ",cls:"compiled",file:"E059_compiled_result_hq.xlsx"}]},
+};
+
+const ICON_MAP = { theory:'📋', prac:'🔬', typing:'⌨️', internal:'📝', compiled:'📦' };
+
+let selectedCourse = null;
+
+function renderCourseGrid() {
+  const grid = document.getElementById('courseGrid');
+  grid.innerHTML = COURSES.map(c => {
+    const meta = COURSE_META[c.id] || {};
+    return `<div class="course-card${selectedCourse===c.id?' selected':''}" onclick="selectCourse('${c.id}')" tabindex="0" role="radio" aria-checked="${selectedCourse===c.id}">
+      <div class="c-check"><svg viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,8.5 11,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="c-icon">${meta.icon||'📄'}</span>
+      <span class="c-code">${c.id}</span>
+      <div class="c-name">${c.label}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectCourse(id) {
+  selectedCourse = selectedCourse === id ? null : id;
+  renderCourseGrid();
+
+  const meta = COURSE_META[id];
+  const course = COURSES.find(c=>c.id===id);
+
+  if (selectedCourse && meta && course) {
+    document.getElementById('selCourseName').textContent = `${id} — ${course.label}`;
+    const tplGrid = document.getElementById('tplGrid');
+    tplGrid.innerHTML = meta.docs.map(d=>`
+      <div class="tpl-item">
+        <div class="tpl-icon ${d.cls}">${ICON_MAP[d.cls]||'📄'}</div>
+        <div class="tpl-body">
+          <div class="tpl-label">${d.t}</div>
+          <div class="tpl-file">${d.file}</div>
+        </div>
+        <span class="tpl-status missing">needed</span>
+      </div>`).join('');
+    document.getElementById('card-templates').style.display = '';
+    document.getElementById('card-upload').style.display = '';
+    setStep(2);
+    setTimeout(()=>document.getElementById('card-templates').scrollIntoView({behavior:'smooth',block:'nearest'}), 80);
+  } else {
+    document.getElementById('card-templates').style.display = 'none';
+    document.getElementById('card-upload').style.display = 'none';
+    setStep(1);
+  }
+  updateSubmitBtn();
+}
+
+function setStep(n) {
+  for (let i=1;i<=4;i++) {
+    const el = document.getElementById(`step${i}-el`);
+    if (!el) continue;
+    el.classList.remove('active','done');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+  }
+}
+
+// File input
+document.getElementById('csvFile').addEventListener('change', function() {
+  document.getElementById('fileName').textContent = this.files[0]?.name || '';
+  updateSubmitBtn();
+  if (this.files[0]) setStep(3);
+});
+
+// Drag-and-drop
+const dz = document.getElementById('dropZone');
+['dragenter','dragover'].forEach(e=>dz.addEventListener(e,ev=>{ev.preventDefault();dz.classList.add('drag-over');}));
+['dragleave','drop'].forEach(e=>dz.addEventListener(e,ev=>{ev.preventDefault();dz.classList.remove('drag-over');}));
+dz.addEventListener('drop',e=>{
+  const f=e.dataTransfer.files;
+  if(f.length){document.getElementById('csvFile').files=f;document.getElementById('fileName').textContent=f[0].name;updateSubmitBtn();setStep(3);}
+});
+
+function updateSubmitBtn() {
+  const hasFile = document.getElementById('csvFile').files.length > 0;
+  document.getElementById('submitBtn').disabled = !(selectedCourse && hasFile);
+}
+
+async function submitForm() {
+  document.getElementById('alertSuccess').classList.remove('show');
+  document.getElementById('alertError').classList.remove('show');
+  const fileInput = document.getElementById('csvFile');
+  if (!fileInput.files.length) { showError('Please upload a CSV file.'); return; }
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('spinner').classList.add('show');
+  document.getElementById('statusText').textContent = 'Generating documents…';
+  setStep(4);
+
+  const fd = new FormData();
+  fd.append('csv_file', fileInput.files[0]);
+
+  try {
+    const res = await fetch('/generate', {method:'POST', body:fd});
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'NSQF_Documents.zip';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      document.getElementById('alertSuccess').classList.add('show');
+      document.getElementById('statusText').textContent = '';
+    } else {
+      const data = await res.json().catch(()=>({error:'Server error.'}));
+      let msg = data.error || 'Unknown error.';
+      if (data.missing_columns) msg += '\n\nMissing columns:\n' + data.missing_columns.join('\n');
+      if (data.unrecognised_courses) msg += '\n\nUnrecognised courses:\n' + data.unrecognised_courses.join('\n');
+      showError(msg);
+      document.getElementById('statusText').textContent = '';
+    }
+  } catch(err) {
+    showError('Network error — is the server running?\n' + err.message);
+    document.getElementById('statusText').textContent = '';
+  } finally {
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('spinner').classList.remove('show');
+    updateSubmitBtn();
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('alertError');
+  el.innerHTML = '❌ &nbsp;' + msg.replace(/\n/g,'<br>');
+  el.classList.add('show');
+}
+
+// Keyboard support for course cards
+document.getElementById('courseGrid').addEventListener('keydown', e=>{
+  if((e.key==='Enter'||e.key===' ') && e.target.classList.contains('course-card')) {
+    const m = e.target.getAttribute('onclick').match(/'(\w+)'/);
+    if(m) selectCourse(m[1]);
+  }
+});
+
+renderCourseGrid();
+</script>
+</body>
+</html>
